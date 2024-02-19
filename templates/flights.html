@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+
+
+flight_data = [{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}}, {"ID":2,"code": "ER45if", "price": 345.99, "departureDate": "2016/02/11", "origin": "MUA", "destination": "LAX", "emptySeats": 52, "plane": {"type": "Boeing 777", "totalSeats": 300}}]
+
+
+
+{% block content %}
+
+<div class="d-inline-flex p-2">I'm an inline flexbox container!</div>  <h1>Available flights</h1>
+  <p class="important">
+    {% for k in fl %}
+
+
+    <div class="card">
+        <div class="card-header">
+            {{ k.code }}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ k.origin }} - {{ k.destination }}</h5>
+          <p class="card-text">{{ k.departureDate }}</p>
+
+       
+
+          <a href="#" class="btn btn-primary">Book flight</a>
+        </div>
+      </div>
+
+    {% endfor %}
+
+</div>
+{% endblock %}
