@@ -8,32 +8,42 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-
-    <title>BAGIRA</title>
+    <link href ="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel = "stylesheet"> 
+    <link href ="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.css" rel = "stylesheet" >
+    <script href = "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"> </script>
+    <script href ="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <title>Bagheera</title>
    
 
-
+  
 
   </head>
   <body>
 
-    <h1 >Bagira Flights</h1>
+
+    <div style="height: 6cm; text-align: center ; background-color: white;">
+      <img src="/static/bagheera-removebg-preview.png" style="height:3cm">
+
+      <h1  >Bagheera Airlines </h1>
+    </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      
-        <a class="nav-link" style="color:Tomato;" href="{{ url_for('logout') }}">Logout</a>
+      <a  class="btn btn-danger" href="{{ url_for('logout') }}">Logout</a>
+
+        
 
 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
     
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
         
           <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('index') }}">Home </a>
+            <a class="nav-link" href="{{ url_for('home') }}">Home </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Link</a>
@@ -45,17 +55,23 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a class="dropdown-item" href="{{ url_for('user') }}">Your Profile</a>
               <a class="dropdown-item" href="{{ url_for('flights') }}">Flights</a>
+              
+
               <a class="dropdown-item" href="#">Your Bookings</a>
               <div class="dropdown-divider"></div>
               
-              <a class="dropdown-item" href="#">Something else here</a>
+              <a class="dropdown-item"  href= "{{url_for('shop') }}">Shop <span class="badge bg-primary rounded-pill">{{ itemCount}}</span> </a>
 
             </div>
           </li>
           <li class="nav-item">
             <a class="nav-link disabled" href="#">Disabled</a>
           </li>
+        
+        
         </ul>
+        
+
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -63,9 +79,14 @@
       </div>
     </nav>
     
+
+
+
     
 
-    <div id="content">{% block content %}{% endblock %}</div>
+    <div id="content"> {% block content %}{% endblock %} </div>
+    
+
     <div id="footer">
       {% block footer %}
       &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.

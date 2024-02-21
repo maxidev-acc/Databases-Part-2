@@ -1,0 +1,27 @@
+{% extends "customers/index.html" %}
+
+
+{% block content %}
+
+<div class="d-inline-flex p-2">I'm an inline flexbox container!</div>  <h1>Available flights</h1>
+  <p class="important">
+    {% for k in fl %}
+
+
+    <div class="card"> 
+      <form method="post"> 
+        <div  name = "ID" class="card-header"  value="{{ k.ID }}" disabled > </div>
+        <input id="name"  name ="ID"  type="text" hidden=" True"  value="{{ k.ID }}">
+        
+        <div class="card-body">
+          <h5 class="card-title">{{ k.origin }}  <img src="https://flagsapi.com/{{k.origin}}/shiny/64.png"> - {{ k.destination }} <img src="https://flagsapi.com/{{k.destination}}/shiny/64.png"> </h5>
+          <p class="card-text">{{ k.departureDate }}</p>
+          <div > {{ k.plane['type'] }} </div> 
+          <button type = "submit" class="btn btn-primary" >Flight Infos</button>
+        </div>
+      </div>
+    </form>
+    {% endfor %}
+
+</div>
+{% endblock %}

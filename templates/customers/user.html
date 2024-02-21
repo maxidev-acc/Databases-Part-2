@@ -1,0 +1,130 @@
+{% extends "customers/index.html" %}
+
+
+
+
+
+{% block content %}
+
+<div class="card text-center">
+    <div class="card-header">
+      Your Info 
+    </div>
+
+    {% for info in userInfo %}
+    <div class="card-body" style="display: block; background-color: lightgrey; height: 8cm;">
+      <h5 class="card-title">Welcome back, {{ info.name }}</h5>
+
+  <label class="switch" > Edit
+    <input id = "toggleswitch" type="checkbox" >
+    <span class="slider"></span>
+</label>
+
+<script> 
+
+    var input = document.getElementById('toggleswitch');
+
+    input.addEventListener('change',function(){
+        if(this.checked) {
+            
+    document.getElementById("name").disabled = false;
+    document.getElementById("sex").disabled = false;
+    document.getElementById("email").disabled = false;
+    document.getElementById("birthdate").disabled = false;
+    document.getElementById("origin").disabled = false;
+    document.getElementById("sub").disabled=false;
+    document.getElementById("mod").disabled = false;
+
+
+
+        } else {
+            
+            
+    document.getElementById("name").disabled = true;
+    document.getElementById("sex").disabled = true;
+    document.getElementById("email").disabled = true;
+    document.getElementById("birthdate").disabled = true;
+    document.getElementById("origin").disabled = true;
+    document.getElementById("true").disabled = true;
+    
+
+        }
+    });
+
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<form method="post">
+ 
+  <form method="post">
+ 
+    <input id="name"  name ="firstname" class="card-text" type="text" disabled=" True" placeholder="{{ info.name }}" value="{{ info.name }}">
+    <input id="sex" name ="sex" class="card-text" type="text" disabled=" True" placeholder="{{ info.sex }}" value="{{ info.sex }}">
+    <input id="email" name = "email" class="card-text" type="text" disabled=" True" placeholder="{{ info.email }} " value="{{ info.email }}">
+    <input id="birthdate" name= "birthDate" class="card-text" type="text" disabled=" True" placeholder="{{ info.birthDate }}"value="{{ info.birthDate }}">
+    <input id="origin"  name = "origin" class="card-text" type="text" disabled=" True" placeholder="{{ info.origin }}" value="{{ info.origin }}">
+    <input id="svn"  name = "SVN" class="card-text" type="text" readonly="readonly" placeholder="{{ info.SVN }}" value="{{ info.SVN }}">
+    <button id = "mod" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" disabled>
+      Save
+    </button>
+  Save
+</button>
+
+
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Save changes?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="submit" id = "sub" class="btn btn-outline-success"  >Change info</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+</form>
+
+
+
+
+
+
+
+</div>
+    <div class="card-footer text-muted">
+      Bagheera Airlines. All rights reserved <img src="https://flagsapi.com/{{info.origin}}/shiny/64.png">
+    </div>
+    {% endfor %}
+
+  </div>
+{% endblock %}
+
+<div id="contentUser">{% block contentUser %}{% endblock %}</div>
