@@ -110,6 +110,7 @@ def login():
             session['role'] = "P"
             #session['products'] =shop_data
             getSumm()
+            session['products'] = []
 
             print(session['role'])
             if session['role'] =="T":
