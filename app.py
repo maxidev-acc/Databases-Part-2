@@ -36,6 +36,8 @@ db = SQLAlchemy(app)
 # Set the secret key to some random bytes. Keep this really secret!
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
+
+
 class Person(db.Model):
     svn = db.Column(db.Integer, primary_key = True)
     first_name = db.Column(db.String(200))
@@ -109,6 +111,7 @@ def login():
             session['id'] = user.svn
             session['role'] = "P"
             #session['products'] =shop_data
+            session['products'] = []
             getSumm()
 
             print(session['role'])
@@ -148,7 +151,8 @@ def user():
 
 @app.route('/logout')
 def logout():
-    session.pop('id', None)
+    session.clear()
+    #session.pop('id', None)
     return redirect(url_for('login'))
 
 #Customer routes
@@ -156,7 +160,7 @@ def logout():
 @app.route('/')
 def index():
     if 'id' in session:
-        print("Logged in as", session['username'])
+        #print("Logged in as", session['username'])
         if session['role'] =="P":
             return render_template("customers/index.html", userInfo = getUser(session['id']), itemCount = getItemCount())
     print("Not logged in")
@@ -231,8 +235,8 @@ def shop():
 @app.route('/backoffice')
 def backoffice():
     if 'id' in session:
-        if session['role'] =="T":
-            print("Logged in as", session['username'])
+        if session['role'] =="P":
+            #print("Logged in as", session['username'])
             return render_template("backoffice/backoffice.html", userInfo = getUser(session['id']))
     print("Not logged in")
     return render_template("login.html")
