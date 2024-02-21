@@ -1,12 +1,28 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash
-import time
+import time, random, string
 from flask_sqlalchemy import SQLAlchemy
+
+from setup import generateshopdata
+
 
 
 
 #dev data
-flight_data = [{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "AT", "destination": "DE", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}}, {"ID":2,"code": "ER45if", "price": 345.99, "departureDate": "2016/02/11", "origin": "MUA", "destination": "LAX", "emptySeats": 52, "plane": {"type": "Boeing 777", "totalSeats": 300}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}}]
-shop_data = [{"ID":1, "code": "ER38sd","price": 100,},{"ID":2, "code": "ER38sd","price": 300,},{"ID":3, "code": "ER38sd","price": 300,} ]
+#flight_data = [{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "AT", "destination": "DE", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}}, {"ID":2,"code": "ER45if", "price": 345.99, "departureDate": "2016/02/11", "origin": "MUA", "destination": "LAX", "emptySeats": 52, "plane": {"type": "Boeing 777", "totalSeats": 300}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}}]
+#shop_data = [{"ID":1, "code": "ER38sd","price": 100,},{"ID":2, "code": "ER38sd","price": 300,},{"ID":3, "code": "ER38sd","price": 300,} ]
+shop_data = generateshopdata()
+flight_data = shop_data
+
+
+
+
+
+
+
+
+
+
+
 
 
 user_ = {"name":"Maximilian", "email": "admin@test.at","sex": "M", "birthDate": "1999/03/20", "origin": "AT", "SVN": "5039 290399", "role":"T",}
@@ -41,6 +57,42 @@ def getItemCount():
     return k
 
 
+def getSumm():
+        sum =0
+        currentproducts = session['products']
+        for i in range(len(currentproducts)):
+                sum =sum + int(currentproducts[i]['price'])
+ 
+        return sum
+
+
+
+def deleteItemFromCart(id):
+        tempP = session['products']
+        for prod in tempP:
+            print(prod['ID'])
+                        
+            if int(prod['ID']) == int(id):
+                for i in range(len(tempP)):
+                    if str(tempP[i]['ID']) == str(id):
+                        print(tempP[i])
+                        del tempP[i]
+                        session['products'] = tempP
+                        print ("List after deletion of dictionary : " +  str(session['products']))
+                        return 0
+ 
+# printing result
+                    
+                 
+
+
+
+
+
+
+
+
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -56,7 +108,8 @@ def login():
             print(user.first_name)
             session['id'] = user.svn
             session['role'] = "P"
-            session['products'] =shop_data
+            #session['products'] =shop_data
+            getSumm()
 
             print(session['role'])
             if session['role'] =="T":
@@ -128,19 +181,31 @@ def flights():
             if request.method == 'POST':
                 id = request.form['ID']
                 print(id)
-                
-
-
                 return redirect(url_for('booking', id=id))
             return render_template('customers/flights.html', fl = flight_data, itemCount = getItemCount())             
     return 'You are not logged in'
 
-@app.route('/booking/<id>')
+@app.route('/booking/<id>', methods=['GET', 'POST'])
 def booking(id):
     if 'id' in session:
+        if request.method == 'POST':
+            for sub in flight_data:
+                
+                if str(sub['ID']) == str(id):
+                    res = sub
+                    print(res)
+                    temp = session['products']
+                    print(type(temp))
+                    temp.append(res)
+                    session['products'] = temp
+                    print(session['products'])
+                    break
+            return redirect(url_for('flights'))
 
+
+        #print(res)            
         if session['role'] =="P":
-            return render_template('customers/booking.html',  userInfo = getUser(session['id']), itemCount = getItemCount())
+            return render_template('customers/booking.html',  userInfo = getUser(session['id']), itemCount = getItemCount(), id= id)
 
 
 @app.route('/shop', methods=['GET', 'POST'])
@@ -151,27 +216,12 @@ def shop():
             if request.method == 'POST':
                 if request.form['ID']:
                     id = request.form['ID']
-                    currentproducts = session['products']
-                    print(id)
-                    print(currentproducts)
-                    for prod in currentproducts:
-                        print(prod['ID'])
-                        
-                        if int(prod['ID']) == int(id):
-                            for i in range(len(currentproducts)):
-                                if str(currentproducts[i]['ID']) == str(id):
-                                    del currentproducts[i]
-                                    break
- 
-# printing result
-                        print ("List after deletion of dictionary : " +  str(currentproducts))
-                    
-                    print(currentproducts)
-                    return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount())
+                    deleteItemFromCart(id)
+                    return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount(), total = getSumm())
                 else:
                     print("Someting else")
 
-            return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount())
+            return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount(), total = getSumm())
 
 
 

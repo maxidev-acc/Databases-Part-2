@@ -3,25 +3,32 @@
 
 {% block content %}
 
-<div class="d-inline-flex p-2">I'm an inline flexbox container!</div>  <h1>Available flights</h1>
-  <p class="important">
-    {% for k in fl %}
 
 
-    <div class="card"> 
+ <h1>Available flights</h1>
+
+
+
+  
+
+ <div class="card" style="display: flex;"> 
+      {% for k in fl %}
       <form method="post"> 
-        <div  name = "ID" class="card-header"  value="{{ k.ID }}" disabled > </div>
+        <div style="background-color: rgb(199, 199, 199); width: 20cm; margin: 0 auto ; margin-top: 1%;"> 
+        <div  name = "ID" class="card-header"  value="{{ k.ID }}" disabled > Flight No.  {{ k.ID }} </div>
         <input id="name"  name ="ID"  type="text" hidden=" True"  value="{{ k.ID }}">
         
-        <div class="card-body">
-          <h5 class="card-title">{{ k.origin }}  <img src="https://flagsapi.com/{{k.origin}}/shiny/64.png"> - {{ k.destination }} <img src="https://flagsapi.com/{{k.destination}}/shiny/64.png"> </h5>
+        <div class="card-body" >
+          <h5 class="card-title">{{ k.origin }}  <img src="https://flagsapi.com/{{k.origin}}/flat/64.png"> - {{ k.destination }} <img src="https://flagsapi.com/{{k.destination}}/flat/64.png"> </h5>
           <p class="card-text">{{ k.departureDate }}</p>
+          
           <div > {{ k.plane['type'] }} </div> 
-          <button type = "submit" class="btn btn-primary" >Flight Infos</button>
+          <button type = "submit" class="btn btn-secondary" >Flight Infos</button>
         </div>
-      </div>
-    </form>
+        </div>
+      </form>
+     
+    
     {% endfor %}
-
-</div>
+  </div>
 {% endblock %}
