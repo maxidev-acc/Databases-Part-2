@@ -238,11 +238,10 @@ def printTicket(id):
         if session['role'] =="P":
             print("Printer")
             newTicket = Ticket()
-            newTicket.content("AUT", "DE", "01.01.1999", "EAR1-Q$3","Maximilain", "100-100" , "02.02.1999")
-            name = str(id) +"pdf"
+            newTicket.content("AUT", "DE", "01.01.1999", "EAR1-Q3","Maximilian","Mustermann", "100-100" , "02.02.1999")
+            name = "Ticket1.pdf"
             newTicket.output(dest='S').encode('latin-1', 'ignore')
             newTicket.output(name)
-            time.sleep(2)
             return send_file("Ticket1.pdf", as_attachment=True, download_name='ticket.pdf')
 
     print("Not logged in")
