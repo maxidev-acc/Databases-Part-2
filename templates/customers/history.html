@@ -1,0 +1,35 @@
+{% extends "customers/index.html" %}
+
+{% block content %}
+
+
+<div style="width: 20cm; margin: 0 auto; background-color: antiquewhite; padding: 3%;"> 
+        {% for entry in history%}
+
+          <div class="card text-center" style="margin: 3%;">
+            <form  method ="post">
+            <div class="card-header">
+            Featured
+            </div>
+            <div class="card-body">
+            <input id="name"  name ="ID"  type="text" hidden=" True"  value="{{ entry.code }}">
+
+            <img src="https://flagsapi.com/{{entry.origin}}/flat/64.png" >  to <img src="https://flagsapi.com/{{entry.destination}}/flat/64.png">
+              <h5 class="card-title">Flight ID: {{entry.code}} , {{entry.origin}} -  {{entry.destination}}</h5>
+              <div> Please print your ticket to fasten the check in at the airport</div>
+              <p class="card-text"></p>
+              <button type="submit" class="btn btn-outline-success"> Print ticket </button>
+            </form>
+            </div>
+            <div class="card-footer text-muted">
+              2 days ago
+            </div>
+          </div>
+        {% endfor%}
+</div>
+
+
+
+
+
+{% endblock %}

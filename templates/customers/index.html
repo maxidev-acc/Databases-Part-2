@@ -20,7 +20,10 @@
   </head>
   <body>
 
-
+    <script> $(".nav a").on("click", function(){
+      $(".nav").find(".active").removeClass("active");
+      $(this).parent().addClass("active");
+   });</script>
     <div style="height: 6cm; text-align: center ; background-color: white;">
       <img src="/static/bagheera-removebg-preview.png" style="height:3cm">
 
@@ -45,27 +48,27 @@
           <li class="nav-item active">
             <a class="nav-link" href="{{ url_for('home') }}">Home </a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+          <li class="nav-item active">
+            <a class="nav-link" href="{{ url_for('user') }}">Your Profile </a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              History
+              Actions
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{{ url_for('user') }}">Your Profile</a>
-              <a class="dropdown-item" href="{{ url_for('flights') }}">Flights</a>
+        
+              <a class="dropdown-item" href="{{ url_for('flights') }}">Flights Dashboard</a>
               
 
-              <a class="dropdown-item" href="#">Your Bookings</a>
+              <a class="dropdown-item" href="{{ url_for('history') }}">History</a>
               <div class="dropdown-divider"></div>
               
-              <a class="dropdown-item"  href= "{{url_for('shop') }}">Shop <span class="badge bg-primary rounded-pill">{{ itemCount}}</span> </a>
+              <a class="dropdown-item"  href= "{{url_for('shop') }}">Your shop <span class="badge bg-primary rounded-pill">{{ itemCount}}</span> </a>
 
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
+            <a class="nav-link disabled" href="{{ url_for('history') }}">Disabled</a>
           </li>
         
         
