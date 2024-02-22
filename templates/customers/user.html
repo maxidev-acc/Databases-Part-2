@@ -1,28 +1,30 @@
 {% extends "customers/index.html" %}
-
-
-
-
-
 {% block content %}
+{% for info in userInfo %}
+
 
 <div class="card text-center">
-    <div class="card-header">
-      Your Info 
-    </div>
+  <div class="card-header">
+    <h5 class="card-title">Welcome back, {{ info.name }} !</h5>
+    <h5 class="card-title">Your current position: {{ info.role }}</h5>
+  </div>
 
-    {% for info in userInfo %}
-    <div class="card-body" style="display: block; background-color: lightgrey; height: 8cm;">
-      <h5 class="card-title">Welcome back, {{ info.name }}</h5>
+   
+    <div class="card-body" style="display: block;  height: 8cm;">
+  
+      <div class="alert alert-danger" role="alert">
+        Attention: Your insurance number serves as unique identifier and therefore cannot be changed
+      </div>
 
-  <label class="switch" > Edit
-    <input id = "toggleswitch" type="checkbox" >
-    <span class="slider"></span>
-</label>
+<div class="custom-control custom-switch">
+  <input type="checkbox" class="custom-control-input" id="customSwitch1" unchecked>
+  <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+</div>
+
 
 <script> 
 
-    var input = document.getElementById('toggleswitch');
+    var input = document.getElementById("customSwitch1");
 
     input.addEventListener('change',function(){
         if(this.checked) {
@@ -32,7 +34,6 @@
     document.getElementById("email").disabled = false;
     document.getElementById("birthdate").disabled = false;
     document.getElementById("origin").disabled = false;
-    document.getElementById("sub").disabled=false;
     document.getElementById("mod").disabled = false;
 
 
@@ -45,8 +46,8 @@
     document.getElementById("email").disabled = true;
     document.getElementById("birthdate").disabled = true;
     document.getElementById("origin").disabled = true;
-    document.getElementById("true").disabled = true;
-    
+    document.getElementById("mod").disabled=true;
+
 
         }
     });
@@ -54,32 +55,15 @@
 </script>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 <form method="post">
  
-  <form method="post">
- 
-    <input id="name"  name ="firstname" class="card-text" type="text" disabled=" True" placeholder="{{ info.name }}" value="{{ info.name }}">
-    <input id="sex" name ="sex" class="card-text" type="text" disabled=" True" placeholder="{{ info.sex }}" value="{{ info.sex }}">
-    <input id="email" name = "email" class="card-text" type="text" disabled=" True" placeholder="{{ info.email }} " value="{{ info.email }}">
-    <input id="birthdate" name= "birthDate" class="card-text" type="text" disabled=" True" placeholder="{{ info.birthDate }}"value="{{ info.birthDate }}">
-    <input id="origin"  name = "origin" class="card-text" type="text" disabled=" True" placeholder="{{ info.origin }}" value="{{ info.origin }}">
-    <input id="svn"  name = "SVN" class="card-text" type="text" readonly="readonly" placeholder="{{ info.SVN }}" value="{{ info.SVN }}">
-    <button id = "mod" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" disabled>
-      Save
-    </button>
+<input id="name"  name ="firstname" class="card-text" type="text" disabled=" True" placeholder="{{ info.name }}" value="{{ info.name }}">
+<input id="sex" name ="sex" class="card-text" type="text" disabled=" True" placeholder="{{ info.sex }}" value="{{ info.sex }}">
+<input id="email" name = "email" class="card-text" type="text" disabled=" True" placeholder="{{ info.email }} " value="{{ info.email }}">
+<input id="birthdate" name= "birthDate" class="card-text" type="text" disabled=" True" placeholder="{{ info.birthDate }}"value="{{ info.birthDate }}">
+<input id="origin"  name = "origin" class="card-text" type="text" disabled=" True" placeholder="{{ info.origin }}" value="{{ info.origin }}">
+<input id="svn"  name = "SVN" class="card-text" type="text" readonly="readonly" placeholder="{{ info.SVN }}" value="{{ info.SVN }}">
+<button id = "mod" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" disabled>
   Save
 </button>
 
@@ -113,6 +97,19 @@
 </form>
 
 
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for category, message in messages %}
+
+    
+    <div class="alert alert-success" role="alert"> {{ message }} </div>
+      
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %} 
+
 
 
 
@@ -120,7 +117,7 @@
 
 </div>
     <div class="card-footer text-muted">
-      Bagheera Airlines. All rights reserved <img src="https://flagsapi.com/{{info.origin}}/flat/64.png">
+      Bagheera Airlines. All rights reserved <img src="https://flagsapi.com/{{info.origin}}/shiny/64.png">
     </div>
     {% endfor %}
 

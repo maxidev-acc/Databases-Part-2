@@ -1,9 +1,9 @@
-from flask import Flask, render_template, session, request, redirect, url_for, flash
+from flask import Flask, render_template, session, request, redirect, url_for, flash, send_file
 import time, random, string
 from flask_sqlalchemy import SQLAlchemy
-
+from tools import Ticket
 from setup import generateshopdata
-
+import os
 
 
 
@@ -14,6 +14,8 @@ shop_data = generateshopdata()
 flight_data = shop_data
 
 
+bank_data = [{"number":"AT30 0000 0000 0000", "bankCode": "Nationalbank Entenhausen","balance": 3599,}]
+history_ = shop_data[1:5]
 
 
 
@@ -27,6 +29,7 @@ flight_data = shop_data
 
 user_ = {"name":"Maximilian", "email": "admin@test.at","sex": "M", "birthDate": "1999/03/20", "origin": "AT", "SVN": "5039 290399", "role":"T",}
 userIn = [{"name":"Maximilian", "email": "admin@test.at","sex": "M", "birthDate": "1999/03/20", "origin": "AT", "SVN": "5039 290399", "role":"T",}]
+
 
 
 app = Flask(__name__)
@@ -83,9 +86,14 @@ def deleteItemFromCart(id):
                         print ("List after deletion of dictionary : " +  str(session['products']))
                         return 0
  
-# printing result
+
+
+def createSession(user, role):
+    print(user.first_name)
+    session['id'] = user.svn
+    session['role'] = "P"
+    session['products'] = []
                     
-                 
 
 
 
@@ -106,22 +114,15 @@ def login():
             password = request.form.get('password')
             print(email)
             user = Person.query.filter_by(email=email).first()
-            print(user.email)
-            print(user.first_name)
-            session['id'] = user.svn
-            session['role'] = "P"
-            #session['products'] =shop_data
-            session['products'] = []
-            getSumm()
-            session['products'] = []
-
-            print(session['role'])
+            createSession(user, "P")
+          
             if session['role'] =="T":
                 return redirect(url_for('backoffice'))
             if session['role'] =="P":
                 return redirect(url_for('home'))
         except:
-            return 'error'
+            flash('Error')
+
 
     return render_template('login.html')
 
@@ -129,7 +130,7 @@ def login():
 @app.route('/user', methods=('GET', 'POST'))
 def user():
     if 'id' in session:
-        if request.method == 'POST':
+        if session['role'] =="P":
             if request.method == 'POST':
                 try:
                     payload = [request.form['SVN'], request.form['firstname'],request.form['email'],request.form['sex'],request.form['birthDate'], request.form['origin']]
@@ -145,7 +146,7 @@ def user():
                     return redirect(url_for('user'))
                 except:
                     return 'An error occured'  
-        if session['role'] =="P":
+        
             return render_template('customers/user.html', userInfo = getUser(session['id']), itemCount = getItemCount())
     return 'You are not logged in'
 
@@ -194,8 +195,8 @@ def flights():
 def booking(id):
     if 'id' in session:
         if request.method == 'POST':
-            for sub in flight_data:
-                
+
+            for sub in flight_data: 
                 if str(sub['ID']) == str(id):
                     res = sub
                     print(res)
@@ -231,12 +232,49 @@ def shop():
 
 
 
+@app.route('/history/<id>', methods= ['GET', 'POST'])
+def printTicket(id):
+    if 'id' in session:
+        if session['role'] =="P":
+            print("Printer")
+            newTicket = Ticket()
+            newTicket.content("AUT", "DE", "01.01.1999", "EAR1-Q$3","Maximilain", "100-100" , "02.02.1999")
+            name = str(id) +"pdf"
+            newTicket.output(dest='S').encode('latin-1', 'ignore')
+            newTicket.output(name)
+            time.sleep(2)
+            return send_file("Ticket1.pdf", as_attachment=True, download_name='ticket.pdf')
+
+    print("Not logged in")
+    return render_template("login.html")
+
+
+
+@app.route('/history', methods=['GET', 'POST'])
+def history():
+    if 'id' in session:
+        if session['role'] =="P":
+            if request.method == "POST":
+                return redirect(url_for('printTicket', id="1test"))
+
+
+            
+            return render_template("customers/history.html", history=history_ )
+
+
+
+    print("Not logged in")
+    return render_template("login.html")
+
+
+
+
 #BACKOFFICE ROUTES
 
 @app.route('/backoffice')
 def backoffice():
     if 'id' in session:
-        if session['role'] =="P":
+        if session['role'] =="T":
             #print("Logged in as", session['username'])
             return render_template("backoffice/backoffice.html", userInfo = getUser(session['id']))
     print("Not logged in")
@@ -246,27 +284,28 @@ def backoffice():
 @app.route('/backoffice/user', methods=('GET', 'POST'))
 def userBackoffice():
     if 'id' in session:
+        if session['role'] =="T":
         #user = Person.query.filter_by(svn=session['ID']).first()
         #userIn1 = [{user.svn, user.first_name, user.email, user.sex, user.birthDate, user.origin}]
         #print(userIn1)
-        if request.method == 'POST':
-            try:
-                payload = [request.form['SVN'], request.form['firstname'],request.form['email'],request.form['sex'],request.form['birthDate'], request.form['origin']]
-                updateUser =Person.query.filter_by(svn=request.form['SVN']).first()
-                updateUser.first_name = request.form['firstname']
-                updateUser.email = request.form['email']
-                updateUser.sex = request.form['sex']
-                updateUser.birthDate = request.form['birthDate']
-                updateUser.origin = request.form['origin']
-                db.session.commit()
-                flash('Sucess')
-                print("Updated user info")
-                return redirect(url_for('userBackoffice'))
+            if request.method == 'POST':
+                try:
+                    payload = [request.form['SVN'], request.form['firstname'],request.form['email'],request.form['sex'],request.form['birthDate'], request.form['origin']]
+                    updateUser =Person.query.filter_by(svn=request.form['SVN']).first()
+                    updateUser.first_name = request.form['firstname']
+                    updateUser.email = request.form['email']
+                    updateUser.sex = request.form['sex']
+                    updateUser.birthDate = request.form['birthDate']
+                    updateUser.origin = request.form['origin']
+                    db.session.commit()
+                    flash('Sucess')
+                    print("Updated user info")
+                    return redirect(url_for('userBackoffice'))
 
-            except:
-                return 'An error occured'
-        if session['role'] =="T":
-            return render_template('backoffice/userBackoffice.html', userInfo = getUser(session['id']))
+                except:
+                    return 'An error occured'
+            
+        return render_template('backoffice/userBackoffice.html', userInfo = getUser(session['id']))
 
     return 'You are not logged in'
 

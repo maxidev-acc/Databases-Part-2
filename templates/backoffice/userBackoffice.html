@@ -19,14 +19,24 @@
         Attention: Your insurance number serves as unique identifier and therefore cannot be changed
       </div>
 
-  <label class="switch" > Edit
-    <input id = "toggleswitch" type="checkbox" >
-    <span class="slider"></span>
-</label>
+
+
+
+    
+
+
+
+
+<div class="custom-control custom-switch">
+  <input type="checkbox" class="custom-control-input" id="customSwitch1" unchecked>
+    <label class="custom-control-label" for="customSwitch1">Toggle this switch element</label>
+</div>
+      
+
 
 <script> 
 
-    var input = document.getElementById('toggleswitch');
+    var input = document.getElementById("customSwitch1");
 
     input.addEventListener('change',function(){
         if(this.checked) {
