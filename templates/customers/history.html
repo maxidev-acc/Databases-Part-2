@@ -1,6 +1,7 @@
 {% extends "customers/index.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
 <div style="width: 20cm; margin: 0 auto; background-color: antiquewhite; padding: 3%;"> 
@@ -17,7 +18,9 @@
             <img src="https://flagsapi.com/{{entry.origin}}/flat/64.png" >  to <img src="https://flagsapi.com/{{entry.destination}}/flat/64.png">
               <h5 class="card-title">Flight ID: {{entry.code}} , {{entry.origin}} -  {{entry.destination}}</h5>
               <div> Please print your ticket to fasten the check in at the airport</div>
+
               <p class="card-text"></p>
+
               <button type="submit" class="btn btn-outline-success"> Print ticket </button>
             </form>
             </div>

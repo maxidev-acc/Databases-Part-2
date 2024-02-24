@@ -24,7 +24,7 @@
       $(".nav").find(".active").removeClass("active");
       $(this).parent().addClass("active");
    });</script>
-    <div style="height: 6cm; text-align: center ; background-color: white;">
+    <div style="height: 5cm; text-align: center ; background-color: #e2e8f0" >
       <img src="/static/bagheera-removebg-preview.png" style="height:3cm">
 
       <h1  >Bagheera Airlines </h1>
@@ -33,23 +33,19 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a  class="btn btn-danger" href="{{ url_for('logout') }}">Logout</a>
-
-        
-
-
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
     
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent" >
         <ul class="navbar-nav mr-auto">
         
           <li class="nav-item active">
             <a class="nav-link" href="{{ url_for('home') }}">Home </a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('user') }}">Your Profile </a>
+            <a class="nav-link " href="{{ url_for('user') }}">Your Profile </a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -57,7 +53,7 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
         
-              <a class="dropdown-item" href="{{ url_for('flights') }}">Flights Dashboard</a>
+              <a class="dropdown-item" href="{{ url_for('flights_search') }}">Flights Dashboard</a>
               
 
               <a class="dropdown-item" href="{{ url_for('history') }}">History</a>

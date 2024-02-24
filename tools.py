@@ -10,6 +10,10 @@ import uuid
 import threading
 import logging
 import time
+import json
+import requests
+
+
 
 
 
@@ -31,12 +35,8 @@ class Ticket(FPDF):
         self.ID =str(uuid.uuid1())
         self.name = self.ID+".pdf"
         self.add_page()
-
         self.set_font("Arial", "B", 12)
         today_date = str(datetime.date.today())
-
-
-
         self.image("static/bagheera-removebg-preview.png",145   ,60,50)
         self.cell(100, 10, " ", border=0, ln =0, )
         self.image("static/qrcode.jpeg",40,200,80)
@@ -56,23 +56,14 @@ class Ticket(FPDF):
         self.cell(55,10, origin, ln=1, border =1)
         self.cell(55,10, "To", ln=0, border =1)
         self.cell(55,10, destiantion, ln=1, border =1)
-        
-
-
         self.cell(180,1, "" ,fill= True, ln= 1)
         self.set_font("Arial", "B", 20)
-
         self.cell(180, 20, "First class ticket", border =1, ln =1)
         self.cell(180,1, "",fill= True, ln= 1)
-
         self.set_font("Arial", "B", 10)
-
         self.cell(60,20, "Plane Airplane ",ln =0, border =1)
         self.cell(50,20, "", border = 1, ln = 1)
         self.cell(180,1, "",fill= True, ln= 1)
-
-
-
         self.set_font("Arial", "B", 10)
         self.cell(100,20, "", ln=1)
         self.cell(180,1, "" ,fill= True, ln= 1)
@@ -89,4 +80,21 @@ name = "Ticket1.pdf"
 newTicket.output(dest='S').encode('latin-1', 'ignore')
 newTicket.output(name)
 """
+
+class Transaction():
+    def __init__(self):
+        pass
+    def verify(self, bankaccount, cvv):
+        r =requests.get("https://retoolapi.dev/iibcMI/transactionAPI/1")
+        print(r)
+        print(r.text)
+        res = json.loads(r.text)
+        print(res)
+        if res["status"] == True and res["bankAccount"] == bankaccount and res["cvv"] ==cvv:
+            print("Success with transaction ID: ", str(res["transactionID"]))
+            return True
+        
+        else:
+            return False
+
 

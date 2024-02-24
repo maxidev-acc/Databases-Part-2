@@ -1,0 +1,29 @@
+{% extends "customers/index.html" %}
+
+
+{% block content %}
+
+
+
+ <h1>Flight search</h1>
+
+
+
+  
+
+ <div class="card" style="display: flex;"> 
+      
+        
+<form class="form-inline my-2 my-lg-0" method="post">
+    <input  id= "from" name ="from" class="form-control mr-sm-2" type="search" placeholder="From" aria-label="Search">
+    <input  id="to" name = "to" class="form-control mr-sm-2" type="search" placeholder="To" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+
+
+</form>
+     
+    
+
+  </div>
+{% endblock %}

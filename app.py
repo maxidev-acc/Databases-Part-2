@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from tools import Ticket
 from setup import generateshopdata
 import os
+from tools import Transaction
 
 
 
@@ -68,7 +69,7 @@ def getSumm():
         for i in range(len(currentproducts)):
                 sum =sum + int(currentproducts[i]['price'])
  
-        return sum
+        return sum*0.9
 
 
 
@@ -91,7 +92,7 @@ def deleteItemFromCart(id):
 def createSession(user, role):
     print(user.first_name)
     session['id'] = user.svn
-    session['role'] = "P"
+    session['role'] = role
     session['products'] = []
                     
 
@@ -141,7 +142,8 @@ def user():
                     updateUser.birthDate = request.form['birthDate']
                     updateUser.origin = request.form['origin']
                     db.session.commit()
-                    flash('Sucess')
+                    time.sleep(2)
+                    flash('Sucessfully updated Profile info')
                     print("Updated user info")
                     return redirect(url_for('user'))
                 except:
@@ -180,16 +182,40 @@ def home():
 
 
 
-@app.route('/flights', methods=['GET', 'POST'])
-def flights():
+@app.route('/available_flights', methods=['GET', 'POST'])
+def available_flights():
     if 'id' in session:
         if session['role'] =="P":
             if request.method == 'POST':
                 id = request.form['ID']
                 print(id)
                 return redirect(url_for('booking', id=id))
-            return render_template('customers/flights.html', fl = flight_data, itemCount = getItemCount())             
+            return render_template('customers/flights.html', fl = session['available_flights'], itemCount = getItemCount())             
     return 'You are not logged in'
+
+
+@app.route('/flights_search', methods=['GET', 'POST'])
+def flights_search():
+    if 'id' in session:
+        if session['role'] =="P":
+            if request.method == 'POST':
+                from_ = request.form['from']
+                to_ = request.form['to']
+                search_results = []
+                
+                for k in flight_data: 
+                    if k['origin'] == from_ and k['destination'] == to_:
+                        search_results.append(k)
+                session["available_flights"] = search_results
+                print(session['available_flights'])
+                return redirect(url_for('available_flights',itemCount = getItemCount()))        
+    
+        return render_template('customers/flight_search.html', itemCount = getItemCount())             
+    
+    return 'You are not logged in'
+
+
+
 
 @app.route('/booking/<id>', methods=['GET', 'POST'])
 def booking(id):
@@ -206,7 +232,7 @@ def booking(id):
                     session['products'] = temp
                     print(session['products'])
                     break
-            return redirect(url_for('flights'))
+            return redirect(url_for('available_flights'))
 
 
         #print(res)            
@@ -214,22 +240,39 @@ def booking(id):
             return render_template('customers/booking.html',  userInfo = getUser(session['id']), itemCount = getItemCount(), id= id)
 
 
-@app.route('/shop', methods=['GET', 'POST'])
+@app.route('/shop', methods=['GET','POST'])
 def shop():
     if 'id' in session:
 
         if session['role'] =="P":
+            print(session['role'])
             if request.method == 'POST':
-                if request.form['ID']:
-                    id = request.form['ID']
+                print(request.method)
+                if "ID" in request.form:
+                    print(request.form)
+                    id =request.form['ID']
+                    print(id)
                     deleteItemFromCart(id)
                     return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount(), total = getSumm())
                 else:
                     print("Someting else")
 
-            return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount(), total = getSumm())
+        return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount(), total = getSumm())
 
+@app.route('/transaction', methods=['GET','POST'])
+def transaction():
+    if 'id' in session:
+        if request.method == "POST":
+                    print("Attempting transaction")
+                    n =Transaction()
+                    if n.verify("8668-8514-3799-5729", "656") != False:
+                        time.sleep(4)
+                        
 
+                        #hier logik buchung in Datenbank eintragen  
+                        session['products'] = []
+                        return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount(), total = getSumm())
+        return redirect(url_for('history'))
 
 
 @app.route('/history/<id>', methods= ['GET', 'POST'])
