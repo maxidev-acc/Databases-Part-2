@@ -5,7 +5,7 @@ from tools import Ticket
 from setup import generateshopdata
 import os
 from tools import Transaction
-
+from db_access import registration
 
 
 #dev data
@@ -100,6 +100,23 @@ def createSession(user, role):
 
 
 
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+
+    if request.method =="POST":
+        payload = (request.form['svn'], request.form['first_name'],request.form['email'],request.form['sex'],request.form['birthDate'], request.form['origin'])
+        print(payload)
+        
+        if registration(payload) == True:
+       
+            user = Person.query.filter_by(svn=payload[0]).first()
+            print(user)
+            createSession(user, "P")
+            return redirect(url_for('home'))
+
+        else:
+            return("An error occured")
+    return render_template("customers/register.html")
 
 
 

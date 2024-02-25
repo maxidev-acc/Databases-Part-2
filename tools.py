@@ -15,8 +15,6 @@ import requests
 
 
 
-
-
 """ 
 userIn = [{"name":"Maximilian", "email": "admin@test.at","sex": "M", "birthDate": "1999/03/20", "origin": "AT", "SVN": "5039 290399","role": "T"}]
 print(type(userIn))
@@ -25,6 +23,37 @@ for k in userIn:
     print(k["role"])
 
 """
+
+
+
+
+
+
+
+
+
+
+
+class Transaction():
+    def __init__(self):
+        pass
+    def verify(self, bankaccount, cvv):
+        r =requests.get("https://retoolapi.dev/iibcMI/transactionAPI/1")
+        print(r)
+        print(r.text)
+        res = json.loads(r.text)
+        print(res)
+        if res["status"] == True and res["bankAccount"] == bankaccount and res["cvv"] ==cvv:
+            print("Success with transaction ID: ", str(res["transactionID"]))
+            return True
+        
+        else:
+            return False
+
+
+
+
+
 
 
 class Ticket(FPDF):
@@ -81,20 +110,5 @@ newTicket.output(dest='S').encode('latin-1', 'ignore')
 newTicket.output(name)
 """
 
-class Transaction():
-    def __init__(self):
-        pass
-    def verify(self, bankaccount, cvv):
-        r =requests.get("https://retoolapi.dev/iibcMI/transactionAPI/1")
-        print(r)
-        print(r.text)
-        res = json.loads(r.text)
-        print(res)
-        if res["status"] == True and res["bankAccount"] == bankaccount and res["cvv"] ==cvv:
-            print("Success with transaction ID: ", str(res["transactionID"]))
-            return True
-        
-        else:
-            return False
 
 
