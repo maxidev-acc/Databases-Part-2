@@ -5,23 +5,42 @@
 
 
 
- <h1>Flight search</h1>
+
+ <style>
+
+.container{
+ 
+  height: 15cm;
+  padding: 3%;
+  text-align: center;
 
 
+}
 
-  
+ </style>
 
- <div class="card" style="display: flex;"> 
-      
+
+  <div class="container"> 
+    <h1>Search flights</h1>
+
+      <div class="card" >
+        <div class="card-body" style="padding: 5%;">
+
+          This is some text within a card body.
+          <form class="form-inline my-2 my-lg-0" method="post">
+            <input  id= "from" name ="from" class="form-control mr-sm-2" type="search" placeholder="From" aria-label="Search" required>
+            <input  id="to" name = "to" class="form-control mr-sm-2" type="search" placeholder="To" aria-label="Search" required>
+            <input  id="to" name = "date" class="form-control mr-sm-2" type="search" placeholder="Date" aria-label="Date" required>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </div> 
+</div>     
         
-<form class="form-inline my-2 my-lg-0" method="post">
-    <input  id= "from" name ="from" class="form-control mr-sm-2" type="search" placeholder="From" aria-label="Search">
-    <input  id="to" name = "to" class="form-control mr-sm-2" type="search" placeholder="To" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form>
 
 
-</form>
+
+
      
     
 

@@ -42,39 +42,37 @@
         <ul class="navbar-nav mr-auto">
         
           <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('home') }}">Home </a>
+            <a class="nav-link" href="{{ url_for('home') }}">Home   <i class="fa fa-home" aria-hidden="true"></i></a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link " href="{{ url_for('user') }}">Your Profile </a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Actions
+              Actions  <i class="fa fa-bolt" aria-hidden="true"></i>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
         
-              <a class="dropdown-item" href="{{ url_for('flights_search') }}">Flights Dashboard</a>
-              
-
-              <a class="dropdown-item" href="{{ url_for('history') }}">History</a>
-              <div class="dropdown-divider"></div>
-              
-              <a class="dropdown-item"  href= "{{url_for('shop') }}">Your shop <span class="badge bg-primary rounded-pill">{{ itemCount}}</span> </a>
-
+              <a class="dropdown-item" href="{{ url_for('flights_search') }}">Search flights <i class="fa fa-plane" aria-hidden="true"></i>
+              </a>
+             <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ url_for('history') }}">Your tickets <i class="fa fa-ticket" aria-hidden="true"></i>
+              </a>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="{{ url_for('history') }}">Disabled</a>
-          </li>
-        
-        
         </ul>
-        
 
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+
+
+        <div class="form-inline my-2 my-lg-0">
+          <a   href= "{{url_for('shop') }}" class="btn btn-dark">Your shop <i class="fa fa-shopping-cart " aria-hidden="true"></i>
+            <span class="badge bg-primary rounded-pill">{{ itemCount}}</span> </a>
+
+                      <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url_for('user') }}">Your Profile  <i class="fa fa-user" aria-hidden="true"></i>
+                      </i>
+                      </a>
+
+      
+        </div>
       </div>
     </nav>
     

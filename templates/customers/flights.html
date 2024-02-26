@@ -10,27 +10,37 @@
 
 
   
+ <div class="container" style="text-align: center; "> 
+  <h1>Available flights</h1>
 
- <div class="card" style="display: flex;"> 
+
+ <div class="card" style="display: flex; padding: 3%;"> 
       {% for k in fl %}
       <form method="post"> 
-        <button type = "submit" class="btn btn-secondary" >Flight Infos
-        <div style="background-color: rgb(199, 199, 199); width: 20cm; margin: 0 auto ; margin-top: 1%;"> 
-        <div  name = "ID" class="card-header"  value="{{ k.ID }}" disabled > Flight No.  {{ k.ID }} </div>
-        <input id="name"  name ="ID"  type="text" hidden=" True"  value="{{ k.ID }}">
-        
-        <div class="card-body" >
-          <h5 class="card-title">{{ k.origin }}  <img src="https://flagsapi.com/{{k.origin}}/flat/64.png"> - {{ k.destination }} <img src="https://flagsapi.com/{{k.destination}}/flat/64.png"> </h5>
-          <p class="card-text">{{ k.departureDate }}</p>
+        <div class="card"> 
+        <button type = "submit" class="btn btn-light" >
+          <div  name = "ID" class="card-header"  value="{{ k.ID }}" disabled> <h2>  Flight No.  {{ k.ID }} </h2> </div>
+
+          Flight Infos
+          <div style=" width: 20cm; margin: 0 auto ; margin-top: 1%;"> 
+          <input id="name"  name ="ID"  type="text" hidden=" True"  value="{{ k.ID }}">
           
-          <div > {{ k.plane['type'] }} </div> 
-          
-        </div>
-        </div>
-      </button>
+          <div class="card-body" >
+            <h5 class="card-title">{{ k.origin }}  <img src="https://flagsapi.com/{{k.origin}}/flat/64.png"> - {{ k.destination }} <img src="https://flagsapi.com/{{k.destination}}/flat/64.png"> </h5>
+            <p class="card-text">{{ k.departureDate }}</p>
+            
+            <div > {{ k.plane['type'] }} </div>   
+          </div>
+          </div>
+        </button>
+      </div>
       </form>
      
     
     {% endfor %}
   </div>
+
+
+
+</div>   
 {% endblock %}

@@ -73,7 +73,7 @@ top: 13px;
                       <div class="col-md-6 mb-4">
       
                         <div class="form-outline">
-                          <input type="text" id="lastName" class="form-control form-control-lg" />
+                          <input type="text" name="second_name" id="lastName" class="form-control form-control-lg" />
                           <label class="form-label" for="lastName">Last Name</label>
                         </div>
       
@@ -89,29 +89,16 @@ top: 13px;
                         </div>
       
                       </div>
-                      <div class="col-md-6 mb-4">
+                      <div class="col-md-6 mb-4 pb-2">
       
-                        <h6 class="mb-2 pb-1">Gender: </h6>
-      
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="sex" id="femaleGender"
-                            value="f" checked />
-                          <label class="form-check-label" for="femaleGender">female</label>
-                        </div>
-      
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="sex" id="maleGender"
-                            value="m"/>
-                          <label class="form-check-label" for="maleGender">Male</label>
-                        </div>
-      
-                        <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="sex" id="otherGender"
-                            value="o" />
-                          <label class="form-check-label" for="otherGender">Other</label>
+                        <div class="form-outline">
+                          <input type="tel" name ="adress" class="form-control form-control-lg" />
+                          <label class="form-label" for="phoneNumber"> Adress </label>
                         </div>
       
                       </div>
+
+                      
                     </div>
       
                     <div class="row">
@@ -126,8 +113,8 @@ top: 13px;
                       <div class="col-md-6 mb-4 pb-2">
       
                         <div class="form-outline">
-                          <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
-                          <label class="form-label" for="phoneNumber">Phone Number</label>
+                          <input type="tel" id="phoneNumber" name = "postal" class="form-control form-control-lg" />
+                          <label class="form-label" for="phoneNumber"> Postal </label>
                         </div>
       
                       </div>
@@ -136,28 +123,29 @@ top: 13px;
                     <div class="col-md-6 mb-4 pb-2">
       
                         <div class="form-outline">
-                          <input type="tel" id="phoneNumber" name="origin" class="form-control form-control-lg"  required/>
-                          <label class="form-label" for="phoneNumber">Country</label>
+                          <input type="tel" id="phoneNumber" name="location" class="form-control form-control-lg"  required/>
+                          <label class="form-label" for="phoneNumber">Location</label>
                         </div>
       
                       </div>
                     </div>
 
 
+                    <div class="row">              
                     <div class="row">
-                      <div class="col-12">
+                    
+                        
+                    <div class="col-md-6 mb-4 pb-2">
       
-                        <select class="select form-control-lg" required>
-                          <option value="1" disabled>Choose option</option>
-                          <option value="2">Subject 1</option>
-                          <option value="3">Subject 2</option>
-                          <option value="4">Subject 3</option>
-                        </select>
-                        <label class="form-label select-label">Choose option</label>
-      
+                      <div class="form-outline">
+                        <input type="tel" id="phoneNumber" name="password" class="form-control form-control-lg"  required/>
+                        <label class="form-label" for="phoneNumber">Password</label>
                       </div>
+    
                     </div>
-      
+
+                    </div>
+
                     <div class="mt-4 pt-2">
                       <input class="btn btn-primary btn-lg" type="submit" value="Submit" />
                     </div>

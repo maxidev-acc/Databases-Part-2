@@ -5,31 +5,18 @@ from tools import Ticket
 from setup import generateshopdata
 import os
 from tools import Transaction
-from db_access import registration
+from db_access import registration, authentification
 
 
-#dev data
-#flight_data = [{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "AT", "destination": "DE", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}}, {"ID":2,"code": "ER45if", "price": 345.99, "departureDate": "2016/02/11", "origin": "MUA", "destination": "LAX", "emptySeats": 52, "plane": {"type": "Boeing 777", "totalSeats": 300}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}},{"ID":1, "code": "ER38sd","price": 400, "departureDate": "2016/03/20", "origin": "MUA", "destination": "SFO", "emptySeats": 0, "plane": {"type": "Boeing 737", "totalSeats": 150}}]
-#shop_data = [{"ID":1, "code": "ER38sd","price": 100,},{"ID":2, "code": "ER38sd","price": 300,},{"ID":3, "code": "ER38sd","price": 300,} ]
+
+
+#global vars for Dev
 shop_data = generateshopdata()
 flight_data = shop_data
-
-
-bank_data = [{"number":"AT30 0000 0000 0000", "bankCode": "Nationalbank Entenhausen","balance": 3599,}]
 history_ = shop_data[1:5]
 
 
 
-
-
-
-
-
-
-
-
-user_ = {"name":"Maximilian", "email": "admin@test.at","sex": "M", "birthDate": "1999/03/20", "origin": "AT", "SVN": "5039 290399", "role":"T",}
-userIn = [{"name":"Maximilian", "email": "admin@test.at","sex": "M", "birthDate": "1999/03/20", "origin": "AT", "SVN": "5039 290399", "role":"T",}]
 
 
 
@@ -43,17 +30,21 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 class Person(db.Model):
-    svn = db.Column(db.Integer, primary_key = True)
-    first_name = db.Column(db.String(200))
-    email = db.Column(db.String(200))
-    sex = db.Column(db.String(200))
-    birthDate = db.Column(db.String(200))
-    origin = db.Column(db.String(10))
-    
+    svn = db.Column(db.String(10), primary_key = True)
+    first_name = db.Column(db.String(50))
+    second_name = db.Column(db.String(50))
+    adress = db.Column(db.String(50))
+    postal = db.Column(db.String(10))
+    location = db.Column(db.String(20))
+    email = db.Column(db.String(50) , unique=True)
+    password = db.Column(db.String() , unique=True)
+
+
+
 
 def getUser(id):
         user = Person.query.filter_by(svn=id).first()
-        session['user'] = [{"name":user.first_name, "email": user.email,"sex": user.sex, "birthDate": user.birthDate, "origin": user.origin, "SVN": user.svn, "role":"T",}]
+        session['user'] = [{"name":user.first_name, "email": user.email, "SVN": user.svn}]
         return session['user']
 
 
@@ -90,7 +81,9 @@ def deleteItemFromCart(id):
 
 
 def createSession(user, role):
-    print(user.first_name)
+    
+
+
     session['id'] = user.svn
     session['role'] = role
     session['products'] = []
@@ -104,16 +97,16 @@ def createSession(user, role):
 def register():
 
     if request.method =="POST":
-        payload = (request.form['svn'], request.form['first_name'],request.form['email'],request.form['sex'],request.form['birthDate'], request.form['origin'])
+        payload = (request.form['svn'], request.form['first_name'],request.form['second_name'],request.form['adress'],request.form['postal'],request.form['location'],request.form['email'], request.form['password'])
         print(payload)
         
         if registration(payload) == True:
-       
-            user = Person.query.filter_by(svn=payload[0]).first()
+            
+            #user = Person.query.filter_by(svn=payload[0]).first()
             print(user)
-            createSession(user, "P")
-            return redirect(url_for('home'))
-
+            #createSession(user, "P")
+            #äreturn redirect(url_for('home'))
+            return 'Sucesss'
         else:
             return("An error occured")
     return render_template("customers/register.html")
@@ -126,19 +119,25 @@ def register():
 def login():
     if request.method == 'POST':
 
-        try:
-            
+        
             email = request.form.get('email')
             password = request.form.get('password')
-            print(email)
-            user = Person.query.filter_by(email=email).first()
-            createSession(user, "P")
+         
+            #user = Person.query.filter_by(email=email).first()
+            credentials = (email, password)
+            
+            id = authentification(credentials)
           
-            if session['role'] =="T":
-                return redirect(url_for('backoffice'))
-            if session['role'] =="P":
-                return redirect(url_for('home'))
-        except:
+    
+            if id != False:
+                user = Person.query.filter_by(svn=id).first()
+
+                createSession(user, "P")
+            
+                if session['role'] =="T":
+                    return redirect(url_for('backoffice'))
+                if session['role'] =="P":
+                    return redirect(url_for('home'))
             flash('Error')
 
 
@@ -380,6 +379,6 @@ def blackbox():
 
 
 
-
 if __name__ =='__main__':
     app.run(debug=True)
+
