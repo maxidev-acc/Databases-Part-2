@@ -84,7 +84,7 @@ top: 13px;
                       <div class="col-md-6 mb-4 d-flex align-items-center">
       
                         <div class="form-outline datepicker w-100">
-                          <input type="text"  name="birthDate" class="form-control form-control-lg" id="birthdayDate" required/>
+                          <input type="text"  name="birthdate" class="form-control form-control-lg" id="birthdayDate" required/>
                           <label for="birthdayDate" class="form-label">Birthday</label>
                         </div>
       
@@ -100,6 +100,18 @@ top: 13px;
 
                       
                     </div>
+
+                    <div class="col-md-6 mb-4 pb-2">
+      
+                      <div class="form-outline">
+                        <input type="tel" name ="houseNr" class="form-control form-control-lg" />
+                        <label class="form-label" for="phoneNumber"> House Nr </label>
+                      </div>
+    
+                    </div>
+
+                    
+                  </div>
       
                     <div class="row">
                       <div class="col-md-6 mb-4 pb-2">
@@ -123,7 +135,7 @@ top: 13px;
                     <div class="col-md-6 mb-4 pb-2">
       
                         <div class="form-outline">
-                          <input type="tel" id="phoneNumber" name="location" class="form-control form-control-lg"  required/>
+                          <input type="tel" id="location" name="location" class="form-control form-control-lg"  required/>
                           <label class="form-label" for="phoneNumber">Location</label>
                         </div>
       
@@ -138,8 +150,18 @@ top: 13px;
                     <div class="col-md-6 mb-4 pb-2">
       
                       <div class="form-outline">
-                        <input type="tel" id="phoneNumber" name="password" class="form-control form-control-lg"  required/>
+                        <input type="tel" name="password" class="form-control form-control-lg"  required/>
                         <label class="form-label" for="phoneNumber">Password</label>
+                      </div>
+    
+                    </div>
+
+                    </div>
+                    <div class="col-md-6 mb-4 pb-2">
+      
+                      <div class="form-outline">
+                        <input type="tel" name="phoneNumber" class="form-control form-control-lg"  required/>
+                        <label class="form-label" for="phoneNumber">Phone</label>
                       </div>
     
                     </div>
@@ -154,6 +176,22 @@ top: 13px;
                         <a href="{{url_for('login')}}"  type = "button" class="btn btn-warning btn-block mb-4" style="margin-top: 3%"> Back to login</a>
 
                     </div>
+
+
+                    
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class=flashes>
+        {% for category, message in messages %}
+    
+        
+        <div class="alert alert-danger" role="alert" style="text-align: center;"> {{ message }} </div>
+          
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %} 
+
                   </form>
                 </div>
               </div>

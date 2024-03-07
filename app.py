@@ -1,19 +1,11 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash, send_file
-import time, random, string
+import time
 from flask_sqlalchemy import SQLAlchemy
-from tools import Ticket
-from setup import generateshopdata
-import os
-from tools import Transaction
-from db_access import registration, authentification
 
 
+from db_access import Transaction, BOOKING,DB_Access,  Registration, Authentification, Ticket, USER
 
 
-#global vars for Dev
-shop_data = generateshopdata()
-flight_data = shop_data
-history_ = shop_data[1:5]
 
 
 
@@ -29,66 +21,53 @@ app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 
-class Person(db.Model):
-    svn = db.Column(db.String(10), primary_key = True)
-    first_name = db.Column(db.String(50))
-    second_name = db.Column(db.String(50))
-    adress = db.Column(db.String(50))
-    postal = db.Column(db.String(10))
-    location = db.Column(db.String(20))
-    email = db.Column(db.String(50) , unique=True)
-    password = db.Column(db.String() , unique=True)
 
 
+class SESSION():
+ 
+    def __init__(self):
+        print("Session init")
+        pass
+
+    def setUser(self, user, role):
+        
+        session['user'] = {"svn": user[0],"first_name":user[1], "last_name": user[2], "postal": user[3], "location":user[4], "street": user[5], "houseNr": user[6], "birthdate": user[7],"email": user[8]}
+        print(session['user'])
+        session['id'] = user[0]
+        session['role'] = role
+        session['products'] = []
+        self.setItemCount()
+    def getUser(self,id):
+            return session['user']
 
 
-def getUser(id):
-        user = Person.query.filter_by(svn=id).first()
-        session['user'] = [{"name":user.first_name, "email": user.email, "SVN": user.svn}]
-        return session['user']
+    def setItemCount(self):
+        count = len(session['products'])
+        session['itemcount'] = count
 
-
-
-def getItemCount():
-    k = len(session['products'])
-    return k
-
-
-def getSumm():
+    def getSumm(self):
         sum =0
         currentproducts = session['products']
-        for i in range(len(currentproducts)):
-                sum =sum + int(currentproducts[i]['price'])
- 
+        K = len(currentproducts)
+        sum = K*100
         return sum*0.9
 
+    def deleteItemFromCart(self,flightNo):
+        
+        index = 0
+        for item in session['products']:
+             
+            if item[0] == flightNo:
+                del session['products'][index]
+                return 0
+            index = index +1 
+    def clearSessionProducts(self):
+        session['products'] = []
+        return session['products']
 
 
-def deleteItemFromCart(id):
-        tempP = session['products']
-        for prod in tempP:
-            print(prod['ID'])
-                        
-            if int(prod['ID']) == int(id):
-                for i in range(len(tempP)):
-                    if str(tempP[i]['ID']) == str(id):
-                        print(tempP[i])
-                        del tempP[i]
-                        session['products'] = tempP
-                        print ("List after deletion of dictionary : " +  str(session['products']))
-                        return 0
- 
-
-
-def createSession(user, role):
-    
-
-
-    session['id'] = user.svn
-    session['role'] = role
-    session['products'] = []
                     
-
+Session = SESSION()
 
 
 
@@ -97,18 +76,16 @@ def createSession(user, role):
 def register():
 
     if request.method =="POST":
-        payload = (request.form['svn'], request.form['first_name'],request.form['second_name'],request.form['adress'],request.form['postal'],request.form['location'],request.form['email'], request.form['password'])
-        print(payload)
+        payload = (request.form['svn'], request.form['first_name'],request.form['second_name'], request.form['postal'], request.form['location'], request.form['adress'], request.form['houseNr'], request.form['birthdate'], request.form['email'], request.form['password'])
+        phone = request.form['phoneNumber']
         
-        if registration(payload) == True:
-            
-            #user = Person.query.filter_by(svn=payload[0]).first()
-            print(user)
-            #createSession(user, "P")
-            #äreturn redirect(url_for('home'))
-            return 'Sucesss'
+        print(payload)
+        res = Registration().register(payload, phone)
+        if  res== True:
+            return redirect(url_for('login'))
+         
         else:
-            return("An error occured")
+            flash(str(res))
     return render_template("customers/register.html")
 
 
@@ -118,29 +95,24 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-
-        
             email = request.form.get('email')
             password = request.form.get('password')
-         
-            #user = Person.query.filter_by(email=email).first()
             credentials = (email, password)
-            
-            id = authentification(credentials)
-          
-    
-            if id != False:
-                user = Person.query.filter_by(svn=id).first()
+            auth=Authentification(credentials)
 
-                createSession(user, "P")
-            
+            if auth.authentification() ==True:
+
+                user = USER().user("email", email)
+                
+
+                Session.setUser(user, "P")
                 if session['role'] =="T":
-                    return redirect(url_for('backoffice'))
+                        return redirect(url_for('backoffice'))
                 if session['role'] =="P":
-                    return redirect(url_for('home'))
-            flash('Error')
-
-
+                        return redirect(url_for('home'))
+            else:
+                flash(auth.errormessage())
+                
     return render_template('login.html')
 
 
@@ -149,23 +121,27 @@ def user():
     if 'id' in session:
         if session['role'] =="P":
             if request.method == 'POST':
-                try:
-                    payload = [request.form['SVN'], request.form['firstname'],request.form['email'],request.form['sex'],request.form['birthDate'], request.form['origin']]
-                    updateUser =Person.query.filter_by(svn=request.form['SVN']).first()
-                    updateUser.first_name = request.form['firstname']
+
+                    #payload = [request.form['SVN'], request.form['firstname'],request.form['email'],request.form['sex'],request.form['birthDate'], request.form['origin']]
+                    svn = request.form['svn']
+                    updateUser =USER().user("svn", svn)
+                    updateUser.first_name = request.form['first_name']
                     updateUser.email = request.form['email']
-                    updateUser.sex = request.form['sex']
-                    updateUser.birthDate = request.form['birthDate']
-                    updateUser.origin = request.form['origin']
+                    print(updateUser.first_name)
+             
+                    #updateUser.origin = request.form['origin']
                     db.session.commit()
+                    db.session.close()
                     time.sleep(2)
+                    Session.setUser(request.form['svn'], "P")
+
                     flash('Sucessfully updated Profile info')
                     print("Updated user info")
                     return redirect(url_for('user'))
-                except:
-                    return 'An error occured'  
+              
+                    #return 'An error occured'  
         
-            return render_template('customers/user.html', userInfo = getUser(session['id']), itemCount = getItemCount())
+            return render_template('customers/user.html')
     return 'You are not logged in'
 
 
@@ -182,7 +158,7 @@ def index():
     if 'id' in session:
         #print("Logged in as", session['username'])
         if session['role'] =="P":
-            return render_template("customers/index.html", userInfo = getUser(session['id']), itemCount = getItemCount())
+            return render_template("customers/index.html", userInfo = Session.getUser(session['id']))
     print("Not logged in")
     return render_template("login.html")
 
@@ -192,7 +168,7 @@ def home():
     if 'id' in session:
         print("Logged in as", session['id'])
         if session['role'] =="P":
-            return render_template("customers/home.html", userInfo = getUser(session['id']), itemCount = getItemCount())
+            return render_template("customers/home.html", userInfo = Session.getUser(session['id']))
     print("Not logged in")
     return render_template("login.html")
 
@@ -203,57 +179,72 @@ def available_flights():
     if 'id' in session:
         if session['role'] =="P":
             if request.method == 'POST':
-                id = request.form['ID']
+                flightNo = request.form['flightNo']
+                session['addtoCart'] = DB_Access().executeFetchOne("SELECT * FROM flights WHERE flightNo = ?", (flightNo,))
                 print(id)
-                return redirect(url_for('booking', id=id))
-            return render_template('customers/flights.html', fl = session['available_flights'], itemCount = getItemCount())             
+                return redirect(url_for('booking', flightNo=flightNo))
+            return render_template('customers/flights.html', fl = session['available_flights'])             
     return 'You are not logged in'
+
+
+
+
+
+
+
+@app.route('/booking/<flightNo>', methods=['GET', 'POST'])
+def booking(flightNo):
+    if 'id' in session:
+        if request.method == 'POST':
+                    k = request.form['flightNo']
+                    print("K", k)
+                    print(request.form['flightNo'])
+                    newFlight = DB_Access().executeFetchOne("SELECT * FROM flights WHERE flightNo = ? ", (request.form['flightNo'],))            
+                    session['products'].append(newFlight)
+                    Session.setItemCount()
+                    print(session['products'])
+                   
+                    return redirect(url_for('available_flights'))
+
+
+        #print(res)            
+        if session['role'] =="P":
+            return render_template('customers/booking.html',  flightNo= flightNo)
+
+
+
+
+
 
 
 @app.route('/flights_search', methods=['GET', 'POST'])
 def flights_search():
     if 'id' in session:
         if session['role'] =="P":
+            availableAirports = DB_Access().executeFetchAll("SELECT * from flights")
+            
+
             if request.method == 'POST':
                 from_ = request.form['from']
                 to_ = request.form['to']
                 search_results = []
                 
-                for k in flight_data: 
-                    if k['origin'] == from_ and k['destination'] == to_:
-                        search_results.append(k)
-                session["available_flights"] = search_results
+                results = DB_Access().executeFetchAll("SELECT * FROM flights NATURAL JOIN pilots NATURAL JOIN personen WHERE depatureAirport = ? AND destinationAirport = ? ", (from_, to_)) 
+                print(results)                                                          
+
+
+                session["available_flights"] = results
                 print(session['available_flights'])
-                return redirect(url_for('available_flights',itemCount = getItemCount()))        
-    
-        return render_template('customers/flight_search.html', itemCount = getItemCount())             
+                return redirect(url_for('available_flights'))        
+
+        return render_template('customers/flight_search.html', airports = availableAirports )             
     
     return 'You are not logged in'
 
 
 
 
-@app.route('/booking/<id>', methods=['GET', 'POST'])
-def booking(id):
-    if 'id' in session:
-        if request.method == 'POST':
 
-            for sub in flight_data: 
-                if str(sub['ID']) == str(id):
-                    res = sub
-                    print(res)
-                    temp = session['products']
-                    print(type(temp))
-                    temp.append(res)
-                    session['products'] = temp
-                    print(session['products'])
-                    break
-            return redirect(url_for('available_flights'))
-
-
-        #print(res)            
-        if session['role'] =="P":
-            return render_template('customers/booking.html',  userInfo = getUser(session['id']), itemCount = getItemCount(), id= id)
 
 
 @app.route('/shop', methods=['GET','POST'])
@@ -264,16 +255,19 @@ def shop():
             print(session['role'])
             if request.method == 'POST':
                 print(request.method)
-                if "ID" in request.form:
+                if "flightNo" in request.form:
                     print(request.form)
-                    id =request.form['ID']
+                    id =request.form['flightNo']
                     print(id)
-                    deleteItemFromCart(id)
-                    return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount(), total = getSumm())
+                    Session.deleteItemFromCart(id)
+                    Session.setItemCount()
+                    return render_template('customers/shop.html', total = Session.getSumm())
                 else:
                     print("Someting else")
 
-        return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount(), total = getSumm())
+        return render_template('customers/shop.html', total = Session.getSumm())
+    return 'Not logged in'
+
 
 @app.route('/transaction', methods=['GET','POST'])
 def transaction():
@@ -282,47 +276,62 @@ def transaction():
                     print("Attempting transaction")
                     n =Transaction()
                     if n.verify("8668-8514-3799-5729", "656") != False:
-                        time.sleep(4)
-                        
+                        passNo = DB_Access().executeFetchSingle("SELECT passNo FROM passenger WHERE svn = ?", (session['id'],))
+                        print(passNo)
+                        BOOKING( session['products'], passNo)  
+                        Session.clearSessionProducts()
+                        Session.setItemCount()
 
-                        #hier logik buchung in Datenbank eintragen  
-                        session['products'] = []
-                        return render_template('customers/shop.html', products= session['products'], userInfo = getUser(session['id']), itemCount = getItemCount(), total = getSumm())
+                        return render_template('customers/shop.html',total = Session.getSumm())
         return redirect(url_for('history'))
 
-
-@app.route('/history/<id>', methods= ['GET', 'POST'])
-def printTicket(id):
-    if 'id' in session:
-        if session['role'] =="P":
-            print("Printer")
-            newTicket = Ticket()
-            newTicket.content("AUT", "DE", "01.01.1999", "EAR1-Q3","Maximilian","Mustermann", "100-100" , "02.02.1999")
-            name = "Ticket1.pdf"
-            newTicket.output(dest='S').encode('latin-1', 'ignore')
-            newTicket.output(name)
-            return send_file("Ticket1.pdf", as_attachment=True, download_name='ticket.pdf')
-
-    print("Not logged in")
-    return render_template("login.html")
 
 
 
 @app.route('/history', methods=['GET', 'POST'])
 def history():
     if 'id' in session:
+        passNo = DB_Access().executeFetchSingle("SELECT passNo FROM passenger WHERE svn = ?", (session['id'],))
+        hist = DB_Access().executeFetchAll("SELECT * FROM bookings NATURAL JOIN flights WHERE passNo =?", (passNo,))
+        print(hist)
         if session['role'] =="P":
+            
             if request.method == "POST":
-                return redirect(url_for('printTicket', id="1test"))
+                return redirect(url_for('printTicket', id=request.form['bookingID']))
 
 
             
-            return render_template("customers/history.html", history=history_ )
-
+            return render_template("customers/history.html", history= hist )
 
 
     print("Not logged in")
     return render_template("login.html")
+
+
+
+
+@app.route('/history/<id>', methods= ['GET', 'POST'])
+def printTicket(id):
+    if 'id' in session:
+        if session['role'] =="P":
+
+            data = DB_Access().executeFetchOne("SELECT * FROM bookings NATURAL JOIN passenger NATURAL JOIN flights NATURAL join personen  WHERE bookingNo =?", (id,)) 
+            print("Printer")
+            print(data)
+            newTicket = Ticket()
+            newTicket.content(data)
+            name = str(data[0])+".pdf"
+            newTicket.output(dest='S').encode('latin-1', 'ignore')
+            newTicket.output(name)
+            return send_file(name, as_attachment=True, download_name= name)
+
+    print("Not logged in")
+    return render_template("login.html")
+
+
+
+
+
 
 
 
@@ -334,7 +343,7 @@ def backoffice():
     if 'id' in session:
         if session['role'] =="T":
             #print("Logged in as", session['username'])
-            return render_template("backoffice/backoffice.html", userInfo = getUser(session['id']))
+            return render_template("backoffice/backoffice.html", userInfo = Session.getUser(session['id']))
     print("Not logged in")
     return render_template("login.html")
 
@@ -348,8 +357,9 @@ def userBackoffice():
         #print(userIn1)
             if request.method == 'POST':
                 try:
+                    svn = request.form['SVN']
                     payload = [request.form['SVN'], request.form['firstname'],request.form['email'],request.form['sex'],request.form['birthDate'], request.form['origin']]
-                    updateUser =Person.query.filter_by(svn=request.form['SVN']).first()
+                    updateUser =USER().user("svn", svn)
                     updateUser.first_name = request.form['firstname']
                     updateUser.email = request.form['email']
                     updateUser.sex = request.form['sex']
@@ -363,7 +373,7 @@ def userBackoffice():
                 except:
                     return 'An error occured'
             
-        return render_template('backoffice/userBackoffice.html', userInfo = getUser(session['id']))
+        return render_template('backoffice/userBackoffice.html', userInfo = Session.getUser(session['id']))
 
     return 'You are not logged in'
 

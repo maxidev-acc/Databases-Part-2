@@ -3,17 +3,25 @@
 {% block content %}
 
 
-<div style="width: 15cm; margin: 0 auto; border-style:groove; border-color: rgb(192, 192, 192);"> 
+<div class="card text-center" style="margin: 3%;">
 <form method = "post">
     <div class="mb-3">
-        <input name = "id" class="form-control" type="text" placeholder="{{ id}}" readonly value = "{{ id}}">
+        <input name = "flightNo" class="form-control" type="text" placeholder=" {{ flightNo }}" value = "{{ flightNo }}">
 
     </div>
     <div class="mb-3">
-        Hier werden die Infos vom Flug nochmal aufgeslistet
+        Add flight to cart?
+        {{ session['addtoCart'][0]}}
+      
+        
     </div>
-    <div class="mb-3 form-check">
-   
+    <div class="mb-3 form-check " >
+        
+        {{ session['addtoCart'][1]}}
+        {{ session['addtoCart'][2]}}
+        {{ session['addtoCart'][3]}}
+        {{ session['addtoCart'][4]}}
+
       
     </div>
     <button type="submit" class="btn btn-outline-success">Add to cart</button>
