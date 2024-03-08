@@ -180,7 +180,7 @@ class USER():
   
     def __init__(self):
         pass
-        self.svn = 0
+        
         self.first_name = ""
         self.last_name= ""
 
@@ -188,11 +188,19 @@ class USER():
         stmt = "SELECT * FROM personen WHERE "+ arg + " = ?"
         print(stmt)
         data = DB_Access().executeFetchOne(stmt,(par,))
+        self.svn = data[0]
         print(data)
         return data
         
-
-
+    def perm(self, svn):
+        print(DB_Access().executeFetchOne("SELECT * FROM pilots WHERE svn =  ? ", (svn,)))
+        if DB_Access().executeFetchOne("SELECT * FROM pilots WHERE svn =  ? ", (svn,)) !=None:
+            return "PIL"
+        if DB_Access().executeFetchOne("SELECT * FROM passenger WHERE svn =  ? ", (svn,)) !=None:
+            return "P"
+        elif DB_Access().executeFetchOne("SELECT * FROM technicans WHERE svn =  ? ", (svn,)) !=None:
+            return "TECH"
+        
 
 class Transaction():
     def __init__(self):

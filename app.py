@@ -72,6 +72,21 @@ Session = SESSION()
 
 
 
+
+
+
+@app.route('/permissiondenied')
+def permDenied():
+    return render_template('permissiondenied.html')
+
+
+
+            
+
+
+
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 
@@ -101,11 +116,11 @@ def login():
             auth=Authentification(credentials)
 
             if auth.authentification() ==True:
-
+                use = USER()
                 user = USER().user("email", email)
-                
-
-                Session.setUser(user, "P")
+                role = use.perm(user[0])
+                print(role)
+                Session.setUser(user, role)
                 if session['role'] =="T":
                         return redirect(url_for('backoffice'))
                 if session['role'] =="P":
@@ -142,7 +157,7 @@ def user():
                     #return 'An error occured'  
         
             return render_template('customers/user.html')
-    return 'You are not logged in'
+    return redirect(url_for('login'))
 
 
 @app.route('/logout')
@@ -159,8 +174,7 @@ def index():
         #print("Logged in as", session['username'])
         if session['role'] =="P":
             return render_template("customers/index.html", userInfo = Session.getUser(session['id']))
-    print("Not logged in")
-    return render_template("login.html")
+    return redirect(url_for('login'))
 
 
 @app.route('/home')
@@ -170,7 +184,7 @@ def home():
         if session['role'] =="P":
             return render_template("customers/home.html", userInfo = Session.getUser(session['id']))
     print("Not logged in")
-    return render_template("login.html")
+    return redirect(url_for('login'))
 
 
 
@@ -180,11 +194,13 @@ def available_flights():
         if session['role'] =="P":
             if request.method == 'POST':
                 flightNo = request.form['flightNo']
-                session['addtoCart'] = DB_Access().executeFetchOne("SELECT * FROM flights WHERE flightNo = ?", (flightNo,))
-                print(id)
+                session['addtoCart'] = DB_Access().executeFetchOne("SELECT * FROM flights NATURAL JOIN pilots NATURAL JOIN airplane_type  NATURAL JOIN airplane_exemplar WHERE flightNo = ?", (flightNo,))
+                print(session['addtoCart'])
                 return redirect(url_for('booking', flightNo=flightNo))
-            return render_template('customers/flights.html', fl = session['available_flights'])             
-    return 'You are not logged in'
+            return render_template('customers/flights.html', fl = session['available_flights'])
+
+
+    return redirect(url_for('login'))
 
 
 
@@ -201,6 +217,7 @@ def booking(flightNo):
                     print(request.form['flightNo'])
                     newFlight = DB_Access().executeFetchOne("SELECT * FROM flights WHERE flightNo = ? ", (request.form['flightNo'],))            
                     session['products'].append(newFlight)
+
                     Session.setItemCount()
                     print(session['products'])
                    
@@ -211,7 +228,7 @@ def booking(flightNo):
         if session['role'] =="P":
             return render_template('customers/booking.html',  flightNo= flightNo)
 
-
+    return redirect(url_for('login'))
 
 
 
@@ -282,7 +299,7 @@ def transaction():
                         Session.clearSessionProducts()
                         Session.setItemCount()
 
-                        return render_template('customers/shop.html',total = Session.getSumm())
+                        return redirect(url_for('history'))
         return redirect(url_for('history'))
 
 
@@ -379,11 +396,11 @@ def userBackoffice():
 
 @app.route('/backoffice/blackbox')
 def blackbox():
-    if 'ID' in session:
+    if 'id' in session:
         if session['role'] =="T":
             return render_template('backoffice/blackbox.html', id = id)
         else:
-            return 'Permission denied'
+            return redirect(url_for('permDenied'))
 
 
 
