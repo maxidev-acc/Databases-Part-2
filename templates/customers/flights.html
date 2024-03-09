@@ -2,33 +2,37 @@
 
 
 {% block content %}
-
-
-
- <h1>Available flights</h1>
-
-
-
   
+ <div class="container" style="text-align: center; ">  <h1> Available flights</h1>
 
- <div class="card" style="display: flex;"> 
-      {% for k in fl %}
+ <div class="card" style="display: flex; padding: 3%;"> 
+      {% for f in fl %}
       <form method="post"> 
-        <div style="background-color: rgb(199, 199, 199); width: 20cm; margin: 0 auto ; margin-top: 1%;"> 
-        <div  name = "ID" class="card-header"  value="{{ k.ID }}" disabled > Flight No.  {{ k.ID }} </div>
-        <input id="name"  name ="ID"  type="text" hidden=" True"  value="{{ k.ID }}">
-        
-        <div class="card-body" >
-          <h5 class="card-title">{{ k.origin }}  <img src="https://flagsapi.com/{{k.origin}}/flat/64.png"> - {{ k.destination }} <img src="https://flagsapi.com/{{k.destination}}/flat/64.png"> </h5>
-          <p class="card-text">{{ k.departureDate }}</p>
+        <div class="card"> 
+        <button type = "submit"  class="btn btn-outline-info">
+          <div  name =  "" class="card-header"  value="{{ f[0] }}" disabled> <h2>  Flight :   {{ f[3] }}  -  {{ f[4] }} </h2> </div>
+
+    
+          <div style=" width: 20cm; margin: 0 auto ; margin-top: 1%;"> 
+          <input id="name"  name ="flightNo"  type="text"  hidden  value="{{ f[0]}}">
           
-          <div > {{ k.plane['type'] }} </div> 
-          <button type = "submit" class="btn btn-secondary" >Flight Infos</button>
-        </div>
-        </div>
+          <div class="card-body" >
+            <h5 class="card-title">{{ f[3] }}  - {{ f[4] }}</h5>
+            <p class="card-text">Depature: {{ f[1] }} at  {{ f[3] }}  Airport</p>
+            <p class="card-text">Arrival: {{ f[2] }} at {{ f[4] }}  Airport</p>
+            <small>  {{ f[0]}}</small>
+            
+          </div>
+          </div>
+        </button>
+      </div>
       </form>
      
     
     {% endfor %}
   </div>
+
+
+
+</div>   
 {% endblock %}

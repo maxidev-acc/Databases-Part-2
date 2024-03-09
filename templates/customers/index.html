@@ -20,8 +20,11 @@
   </head>
   <body>
 
-
-    <div style="height: 6cm; text-align: center ; background-color: white;">
+    <script> $(".nav a").on("click", function(){
+      $(".nav").find(".active").removeClass("active");
+      $(this).parent().addClass("active");
+   });</script>
+    <div style="height: 5cm; text-align: center ; background-color: #e2e8f0" >
       <img src="/static/bagheera-removebg-preview.png" style="height:3cm">
 
       <h1  >Bagheera Airlines </h1>
@@ -30,52 +33,46 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a  class="btn btn-danger" href="{{ url_for('logout') }}">Logout</a>
-
-        
-
-
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
     
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent" >
         <ul class="navbar-nav mr-auto">
         
           <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('home') }}">Home </a>
+            <a class="nav-link" href="{{ url_for('home') }}">Home   <i class="fa fa-home" aria-hidden="true"></i></a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
+          <li class="nav-item active">
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              History
+              Actions  <i class="fa fa-bolt" aria-hidden="true"></i>
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="{{ url_for('user') }}">Your Profile</a>
-              <a class="dropdown-item" href="{{ url_for('flights') }}">Flights</a>
-              
-
-              <a class="dropdown-item" href="#">Your Bookings</a>
-              <div class="dropdown-divider"></div>
-              
-              <a class="dropdown-item"  href= "{{url_for('shop') }}">Shop <span class="badge bg-primary rounded-pill">{{ itemCount}}</span> </a>
-
+        
+              <a class="dropdown-item" href="{{ url_for('flights_search') }}">Search flights <i class="fa fa-plane" aria-hidden="true"></i>
+              </a>
+             <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ url_for('history') }}">Your tickets <i class="fa fa-ticket" aria-hidden="true"></i>
+              </a>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
-          </li>
-        
-        
         </ul>
-        
 
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
+
+
+        <div class="form-inline my-2 my-lg-0">
+          <a   href= "{{url_for('shop') }}" class="btn btn-dark">Your shop <i class="fa fa-shopping-cart " aria-hidden="true"></i>
+            <span class="badge bg-primary rounded-pill">{{ session['itemcount']}}</span> </a>
+
+                      <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url_for('user') }}">Your Profile  <i class="fa fa-user" aria-hidden="true"></i>
+                      </i>
+                      </a>
+
+      
+        </div>
       </div>
     </nav>
     

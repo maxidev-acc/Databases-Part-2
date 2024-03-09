@@ -2,22 +2,41 @@
 
 {% block content %}
 
+<div class="card text-center" style="margin: 3%; padding:2%;">
+    <div class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;"> <h2> Your flight </h2> </div>
+    
+    
+    <div style=" display: flex;"> 
 
-<div style="width: 15cm; margin: 0 auto; border-style:groove; border-color: rgb(192, 192, 192);"> 
-<form method = "post">
-    <div class="mb-3">
-        <input name = "id" class="form-control" type="text" placeholder="{{ id}}" readonly value = "{{ id}}">
+        
+        <div>
+            <img src="{{ url_for('static',filename='seats.png') }}" alt=""> 
+        </div>
+    
+    <div class="btn btn-outline-error"  style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;">
+        
+        <div class="mb-3 form-check " > <h4> Airplane Details</h4> </div>
+        <div class="mb-3 form-check " > Airplane Type : {{ session['addtoCart'][11]}}</div>
+        <div class="mb-3 form-check " > Number Seats : {{ session['addtoCart'][10]}}</div>
+        <div class="mb-3 form-check " > Airplane Type : {{ session['addtoCart'][11]}}</div>
+        <div class="mb-3 form-check " > Airplane ID : {{ session['addtoCart'][12]}}</div>
+        <div class="mb-3 form-check " > Airplane Manufacturing Year : {{ session['addtoCart'][13]}}</div>
+    </div>
+    
+    <div  class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;">
+        <div class="mb-3 form-check " > <h4> Depature - Arrival</h4>
+        {{ session['addtoCart'][3]}} {{ session['addtoCart'][1]}} <div style="font-weight: bold;">  -</div> {{ session['addtoCart'][4]}} {{ session['addtoCart'][2]}}</div>
+        <div class="mb-3 form-check " ></div>
+        <div class="mb-3 form-check " > Your Pilot: {{ session['addtoCart'][5]}}</div>
 
+        <form method = "post">
+        <div class="mb-3"> <input name = "flightNo" class="form-control" type="text" hidden value = "{{ flightNo }}"> </div>
+        <button type="submit" class="btn btn-outline-success">Add to cart</button>
+        </form>
     </div>
-    <div class="mb-3">
-        Hier werden die Infos vom Flug nochmal aufgeslistet
-    </div>
-    <div class="mb-3 form-check">
-   
-      
-    </div>
-    <button type="submit" class="btn btn-outline-success">Add to cart</button>
-  </form>
+ 
+
+</div>
 </div>
 
 
