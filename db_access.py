@@ -2,15 +2,7 @@
 import sqlite3
 import hashlib
 from hashlib import sha256
-
-
-
-
-
-
-
-
-
+import string
 
 
 class Registration():
@@ -19,21 +11,17 @@ class Registration():
 
     def register(self, data, phone):
             data =list(data)
-            print(len(data))
             pw = data[9]
             del data[9]
             print(pw)
             hash_pw = sha256(pw.encode('utf-8')).hexdigest()
             data.append(hash_pw)
-            print(data)
-
             insTuple = tuple(data)
             phoneT = (data[0], phone)
-            import string
             letters = string.ascii_lowercase
             pn = "PASS-NO-" + random.choice(letters)+ random.choice(letters)+ "-" + str(random.randint(100, 999))
             try:
-                
+                assert(isinstance(insTuple[0], int))
                 DB_Access().executeInsert("INSERT INTO personen VALUES(?, ?, ?, ?,?,?,?,?,?,?)", insTuple)
                 DB_Access().executeInsert("INSERT INTO telNo VALUES(?, ?)",phoneT)
                 DB_Access().executeInsert("INSERT INTO passenger VALUES(?, ?)",(data[0], pn))
