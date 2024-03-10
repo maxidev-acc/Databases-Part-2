@@ -163,40 +163,34 @@ def user():
 @app.route('/logout')
 def logout():
     session.clear()
-    #session.pop('id', None)
     return redirect(url_for('login'))
 
-#Customer routes
 
 @app.route('/')
 def index():
-    if 'id' in session:
-        #print("Logged in as", session['username'])
-        if session['role'] =="P":
+    if 'id' in session and session['role'] =="P":
             return render_template("customers/index.html", userInfo = Session.getUser(session['id']))
     return redirect(url_for('login'))
 
 
 @app.route('/home')
 def home():
-    if 'id' in session:
-        print("Logged in as", session['id'])
-        if session['role'] =="P":
-            return render_template("customers/home.html", userInfo = Session.getUser(session['id']))
-    print("Not logged in")
+    if 'id' in session and session['role'] =="P":
+        return render_template("customers/home.html", userInfo = Session.getUser(session['id']))
+   
     return redirect(url_for('login'))
 
 
 
 @app.route('/available_flights', methods=['GET', 'POST'])
 def available_flights():
-    if 'id' in session:
-        if session['role'] =="P":
+    if 'id' in session and session['role'] =="P":
             if request.method == 'POST':
                 flightNo = request.form['flightNo']
                 session['addtoCart'] = DB_Access().executeFetchOne("SELECT * FROM flights NATURAL JOIN pilots NATURAL JOIN airplane_type  NATURAL JOIN airplane_exemplar WHERE flightNo = ?", (flightNo,))
                 print(session['addtoCart'])
                 return redirect(url_for('booking', flightNo=flightNo))
+            
             return render_template('customers/flights.html', fl = session['available_flights'])
 
 
@@ -210,23 +204,20 @@ def available_flights():
 
 @app.route('/booking/<flightNo>', methods=['GET', 'POST'])
 def booking(flightNo):
-    if 'id' in session:
+    if 'id' in session and session['role'] =="P":
         if request.method == 'POST':
+                    
                     k = request.form['flightNo']
                     print("K", k)
                     print(request.form['flightNo'])
                     newFlight = DB_Access().executeFetchOne("SELECT * FROM flights WHERE flightNo = ? ", (request.form['flightNo'],))            
                     session['products'].append(newFlight)
-
                     Session.setItemCount()
                     print(session['products'])
-                   
                     return redirect(url_for('available_flights'))
-
-
-        #print(res)            
-        if session['role'] =="P":
-            return render_template('customers/booking.html',  flightNo= flightNo)
+         
+     
+        return render_template('customers/booking.html',  flightNo= flightNo)
 
     return redirect(url_for('login'))
 
@@ -236,25 +227,18 @@ def booking(flightNo):
 
 @app.route('/flights_search', methods=['GET', 'POST'])
 def flights_search():
-    if 'id' in session:
-        if session['role'] =="P":
-            availableAirports = DB_Access().executeFetchAll("SELECT * from flights")
+    if 'id' in session and session['role'] =="P":
             
-
+        
             if request.method == 'POST':
                 from_ = request.form['from']
                 to_ = request.form['to']
-                search_results = []
-                
                 results = DB_Access().executeFetchAll("SELECT * FROM flights NATURAL JOIN pilots NATURAL JOIN personen WHERE depatureAirport = ? AND destinationAirport = ? ", (from_, to_)) 
-                print(results)                                                          
-
-
                 session["available_flights"] = results
                 print(session['available_flights'])
                 return redirect(url_for('available_flights'))        
 
-        return render_template('customers/flight_search.html', airports = availableAirports )             
+            return render_template('customers/flight_search.html' )             
     
     return 'You are not logged in'
 
@@ -266,12 +250,9 @@ def flights_search():
 
 @app.route('/shop', methods=['GET','POST'])
 def shop():
-    if 'id' in session:
-
-        if session['role'] =="P":
-            print(session['role'])
+    if 'id' in session and session['role'] =="P":
+        
             if request.method == 'POST':
-                print(request.method)
                 if "flightNo" in request.form:
                     print(request.form)
                     id =request.form['flightNo']
@@ -279,11 +260,10 @@ def shop():
                     Session.deleteItemFromCart(id)
                     Session.setItemCount()
                     return render_template('customers/shop.html', total = Session.getSumm())
-                else:
-                    print("Someting else")
 
-        return render_template('customers/shop.html', total = Session.getSumm())
-    return 'Not logged in'
+            return render_template('customers/shop.html', total = Session.getSumm())
+    
+    return redirect(url_for('login'))
 
 
 @app.route('/transaction', methods=['GET','POST'])
@@ -354,7 +334,7 @@ def printTicket(id):
 
 
 #BACKOFFICE ROUTES
-
+#svn = 1000077152 
 @app.route('/backoffice')
 def backoffice():
     if 'id' in session:
