@@ -1,0 +1,52 @@
+{% extends "customers/index.html" %}
+
+
+{% block content %}
+  
+ <div class="container" style="text-align: center; ">  <h1> Your flights</h1>
+
+ <div class="card" style="display: flex; padding: 3%;"> 
+      {% for f in flights %}
+
+      
+
+
+    
+        <div class="card"> 
+       
+          <div  name =  "" class="card-header"  value="{{ f[0] }}" disabled> <h2>  Flight :   {{ f[3] }}  -  {{ f[4] }} </h2> </div>
+
+            
+          {% if  f[1] < date %}
+          <small id = "sub"  class="btn btn-outline-error"  style="color: rgb(90, 100, 0); border-style: groove; border-color: rgb(90, 100, 0);" > Allready passed</small>
+          {% endif %}
+          
+          
+
+          <div style=" width: 20cm; margin: 0 auto ; margin-top: 1%;"> 
+          
+          
+          <div class="card-body" >
+            <small id = "sub"  class="btn btn-outline-error"  style="color: rgb(0, 192, 42); border-style: groove; border-color: rgb(0, 192, 42);" > Your Role: {{ session['role']}}</small>
+
+            <h5 class="card-title">{{ f[3] }}  - {{ f[4] }}</h5>
+            <p class="card-text">Depature: {{ f[1] }} at  {{ f[3] }}  Airport</p>
+            <p class="card-text">Arrival: {{ f[2] }} at {{ f[4] }}  Airport</p>
+
+          
+            <small>  {{ f[0]}}</small>
+            
+          </div>
+          </div>
+        
+      </div>
+
+     
+    
+    {% endfor %}
+  </div>
+
+
+
+</div>   
+{% endblock %}

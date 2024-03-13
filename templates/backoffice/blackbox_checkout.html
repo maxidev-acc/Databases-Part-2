@@ -1,0 +1,63 @@
+{% extends "customers/index.html" %}
+
+
+{% block content %}
+
+  
+<div class="container" style="text-align: center; ">  <h1> Checkout blackboxes</h1>
+
+
+  {% for f in available_boxes %}
+  <div class="card" style="display: flex; padding: 3%;"> 
+       
+       
+          
+      <div class="card" >
+        
+
+
+
+        <div  name =  "" class="card-header"  value="{{ f[0] }}" disabled> <h4>  Blackbox :   {{ f[1] }}  </h4> </div>
+           
+            <div class="card-body" style="display: flex; padding: 1%;" >
+
+
+              <div  class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;">
+              <h6>Blackbox belongs to Airplane  </h6>
+              <p class="card-text">  Item {{ f[3] }} </p>
+              <p class="card-text">  Type {{ f[6] }} </p>
+              </div>
+
+              <div  class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;">
+              <p class="card-text"> {{ f[1] }}</p>
+
+              {% if  f[2] == "0" %}
+              <small id = "sub"  class="btn btn-outline-error"  style="color: red; border-style: groove; border-color: red;" > Currently checked out by:  {{ f[0] }}</small>
+              <p class="card-text"> </p>
+              {% endif %}
+              </div>
+
+            
+
+
+              <div  class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(255, 255, 255); display: block; width: 100%; margin: 1%;">
+
+             <form method="post"> 
+              <input id="blackbox"  name ="id"  type="text"  hidden  value="{{ f[1]}}"> 
+              {% if  f[2] == "1" %}
+              <button id="{{ f[0]}}"   type = submit class="btn btn-warning btn-block mb-4" name ="flightNo"   type="text" value="{{ f[0]}}">  Checkout blackbox</button>
+              {% elif f[2 == "0"] %}
+              <button id="{{ f[0]}}"  class="btn btn-warning btn-block mb-4" name ="flightNo"  type="text"   disabled value="{{ f[0]}}">  Checkout blackbox</button>
+              {% endif %}
+             </form>
+             </div>
+             
+      </div>
+           </div>
+       </div>
+     {% endfor %}
+
+
+
+
+  {% endblock %}

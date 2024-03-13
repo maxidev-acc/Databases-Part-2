@@ -51,25 +51,15 @@ APP -- User ist Angestellter
 
 
 
+#Beispielbenutzer:
+
+Email, Passwort
+admin@gmail.com, admin
+maxi@gmail.com, maxi
+JeffreyHarris@gmail.com, pilot
+EvaCollins@gmail.com, technican
 
 
-#Änderung und Impport von Models in DB
 
 
-(.venv) C:\Users\maxim\Documents\GitHub\DatenbankenFluggesellschaft>.venv\Scripts\activate.bat
 
-(.venv) C:\Users\maxim\Documents\GitHub\DatenbankenFluggesellschaft>flask shell
-Python 3.11.0 (main, Oct 24 2022, 18:26:48) [MSC v.1933 64 bit (AMD64)] on win32
-App: app
-Instance: C:\Users\maxim\Documents\GitHub\DatenbankenFluggesellschaft\instance
->>> from app import db, Person
->>> db.drop_all()
->>> exit()
-
-(.venv) C:\Users\maxim\Documents\GitHub\DatenbankenFluggesellschaft>flask shell
-Python 3.11.0 (main, Oct 24 2022, 18:26:48) [MSC v.1933 64 bit (AMD64)] on win32
-App: app
-Instance: C:\Users\maxim\Documents\GitHub\DatenbankenFluggesellschaft\instance
->>> from app import db, Person
->>> db.create_all()
->>>

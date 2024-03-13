@@ -4,7 +4,7 @@
 {% block content %}
 
 
-
+<script src='https://kit.fontawesome.com/a076d05399.js'></script>
 
  <style>
 
@@ -25,14 +25,18 @@
 
       
       <div class="card" >
-        <div class="card-body" style="padding: 5%;">
-       
+        <div class="card-body" style="padding: 5%; text-align: center ;">
+         
+          <form class="form-inline my-2 my-lg-0" method="post" style="display: block" >
+           
+            <div style="display: flex">
 
-          This is some text within a card body.
-          <form class="form-inline my-2 my-lg-0" method="post">
-            <input  id= "from" name ="from" class="form-control mr-sm-2" type="search" placeholder="From" aria-label="Search" required>
-            <input  id="to" name = "to" class="form-control mr-sm-2" type="search" placeholder="To" aria-label="Search" required>
-            <input  id="to" name = "date" class="form-control mr-sm-2" type="search" placeholder="Date" aria-label="Date" required>
+
+              <input  id= "from" name ="from" class="form-control mr-sm-2"  placeholder="From" aria-label="Search " required style='width: 100%;'>
+              <i class='fa fa-angle-double-right' style='font-size:48px;color:rgb(19, 9, 44); margin-top: 0 auto; margin-left: 3%; margin-right: 3%;'></i>
+              <input  id="to" name = "to" class="form-control mr-sm-2" placeholder="To" aria-label="Search" required style='width: 100%;'>
+
+            </div>
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>

@@ -3,9 +3,12 @@
 {% block content %}
 
 <div class="card text-center" style="margin: 3%; padding:2%;">
-    <div class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;"> <h2> Your flight </h2> </div>
+    <div class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;"> <h2> Your flight details </h2>
+    <small>  {{ session['addtoCart'][0]}}</small>
     
+    </div>
     
+
     <div style=" display: flex;"> 
 
         
@@ -16,7 +19,7 @@
     <div class="btn btn-outline-error"  style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;">
         
         <div class="mb-3 form-check " > <h4> Airplane Details</h4> </div>
-        <div class="mb-3 form-check " > Airplane Type : {{ session['addtoCart'][11]}}</div>
+        
         <div class="mb-3 form-check " > Number Seats : {{ session['addtoCart'][10]}}</div>
         <div class="mb-3 form-check " > Airplane Type : {{ session['addtoCart'][11]}}</div>
         <div class="mb-3 form-check " > Airplane ID : {{ session['addtoCart'][12]}}</div>

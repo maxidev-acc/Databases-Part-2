@@ -15,23 +15,28 @@
     <title>Bagheera</title>
    
 
+
+
+    
+  
   
 
   </head>
   <body>
 
-    <script> $(".nav a").on("click", function(){
-      $(".nav").find(".active").removeClass("active");
-      $(this).parent().addClass("active");
-   });</script>
+
+
+
+
     <div style="height: 5cm; text-align: center ; background-color: #e2e8f0" >
       <img src="/static/bagheera-removebg-preview.png" style="height:3cm">
 
       <h1  >Bagheera Airlines </h1>
     </div>
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id = "all" >
       <a  class="btn btn-danger" href="{{ url_for('logout') }}">Logout</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -41,8 +46,8 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent" >
         <ul class="navbar-nav mr-auto">
         
-          <li class="nav-item active">
-            <a class="nav-link" href="{{ url_for('home') }}">Home   <i class="fa fa-home" aria-hidden="true"></i></a>
+          <li class="nav-item active" id = "home">
+            <a class="nav-link" href="{{ url_for('home') }}" >Home   <i class="fa fa-home" aria-hidden="true"></i></a>
           </li>
           <li class="nav-item active">
           </li>
@@ -52,11 +57,25 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
         
-              <a class="dropdown-item" href="{{ url_for('flights_search') }}">Search flights <i class="fa fa-plane" aria-hidden="true"></i>
+              <a class="dropdown-item" href="{{ url_for('flights_search') }}" id ="search">Search flights <i class="fa fa-plane" aria-hidden="true"></i>
               </a>
              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="{{ url_for('history') }}">Your tickets <i class="fa fa-ticket" aria-hidden="true"></i>
+              <a class="dropdown-item" href="{{ url_for('history') }}" id = "tickets"> Your tickets <i class="fa fa-ticket" aria-hidden="true"></i>
               </a>
+
+            </a>
+           
+    
+
+
+             <a class="dropdown-item" href="{{ url_for('blackbox_return') }}" id = "return">Return blackbox <i class="fa fa-ticket" aria-hidden="true"></i>
+             </a>
+             <a class="dropdown-item" href="{{ url_for('blackbox_checkout') }}" id = "checkout">Blackbox checkout<i class="fa fa-ticket" aria-hidden="true"></i>
+             </a>
+            
+             <a class="dropdown-item" href="{{ url_for('employee_flights') }}" id = "flights">Your flights <i class="fa fa-ticket" aria-hidden="true"></i>
+             </a>
+
             </div>
           </li>
         </ul>
@@ -64,7 +83,7 @@
 
 
         <div class="form-inline my-2 my-lg-0">
-          <a   href= "{{url_for('shop') }}" class="btn btn-dark">Your shop <i class="fa fa-shopping-cart " aria-hidden="true"></i>
+          <a   href= "{{url_for('shop') }}" class="btn btn-dark" id ="shop">Your shop <i class="fa fa-shopping-cart " aria-hidden="true"></i>
             <span class="badge bg-primary rounded-pill">{{ session['itemcount']}}</span> </a>
 
                       <a class="btn btn-outline-success my-2 my-sm-0" href="{{ url_for('user') }}">Your Profile  <i class="fa fa-user" aria-hidden="true"></i>
@@ -77,12 +96,34 @@
     </nav>
     
 
+    <script>
+    var data = "{{ session['role'] }}" ; console.log(data);
+     if (data != "PASSENGER") { 
+      document.getElementById("search").hidden =true;
+      document.getElementById("tickets").hidden =true;
+      document.getElementById("shop").hidden =true;
+      document.getElementById("home").hidden =true;
 
+      
+
+    };
+
+    if (data == "PASSENGER")  { 
+      console.log("PASS");
+      document.getElementById("return").hidden =true;
+      document.getElementById("checkout").hidden =true;
+      document.getElementById("flights").hidden =true;
+      
+    };
+
+
+
+     </script>
 
     
 
     <div id="content"> {% block content %}{% endblock %} </div>
-    
+
 
     <div id="footer">
       {% block footer %}

@@ -1,7 +1,7 @@
 import random, string
 
 import names
-from database_setup.raw_data import letters, lands, cities
+from raw_data import letters, lands, cities
 import sqlite3
 import string
 from hashlib import sha256
@@ -16,7 +16,7 @@ class DB_Access():
     def __init__(self):
         pass
     def execute(self,sql, arg =()):
-        con = sqlite3.connect("instance/db.db")
+        con = sqlite3.connect("C:/Users/maxim/Documents/GitHub/DatenbankenFluggesellschaft/instance/db.db")
         cur = con.cursor()
         con.execute("PRAGMA foreign_keys = 1")
         if arg != ():
@@ -292,6 +292,30 @@ bookings = """ CREATE TABLE bookings (
 );"""
 
 
+
+blackbox1 = """ CREATE TABLE blackbox (
+  "employee_id" VARCHAR,
+  "blackbox_id" TEXT,  
+  "is_available" TEXT,
+ CONSTRAINT tpz FOREIGN KEY (employee_id) REFERENCES employees (employee_id),
+ CONSTRAINT tpk FOREIGN KEY (blackbox_id) REFERENCES airplane_exemplar (blackbox_id),
+ CONSTRAINT pk PRIMARY KEY (blackbox_id)
+);"""
+def setup_bb():
+    boxes = DB_Access().execute("SELECT blackbox_id FROM airplane_exemplar ")
+    res = []
+    for k in boxes:
+        res.append(k[0])
+
+    for box in res:
+        t = True
+        emp = None
+        val = (emp, box, t)
+        DB_Access().execute("INSERT INTO blackbox VALUES (?,?,?)",val )
+
+
+
+
 import uuid
 def genBooking():
     passenger= FLATTEN().returnFlat(DB_Access().execute("SELECT passNo FROM passenger"))
@@ -355,7 +379,7 @@ def gen_flights():
 def generatePersonData():
     letters = string.ascii_lowercase
     data = []
-    for k in range(1, 4000):
+    for k in range(0, 1):
         try:
             svn = str(random.randint(1000000000, 9999999999))
             first_name = names.get_first_name()
@@ -364,16 +388,16 @@ def generatePersonData():
             postal = str(random.randint(1000, 9999))
             location = random.choice(cities)
             email = first_name + last_name + "@gmail.com"
-            password = ""
-            birthdate = 17041999
-            for k in range(0, 10):
-                password = ''.join(random.choice(letters) for i in range(8))
+            password = "technican"
+            birthdate = 19042000
+            #for k in range(0, 10):
+             #   password = ''.join(random.choice(letters) for i in range(8))
             houseNR = random.randint(0, 9)
 
             hash_pw = sha256(password.encode('utf-8')).hexdigest()
 
             user = ((svn, first_name, last_name, postal, location,street , houseNR, birthdate , email, hash_pw))
-
+            print(user)
             DB_Access().execute("INSERT INTO personen VALUES (?,?,?,?,?,?,?,?,?,?)",user)
             # registration((svn, first_name,last_name, adress, postal, location,email, password))
         except:
@@ -396,6 +420,23 @@ def generateEmployees():
 
             except:
                 pass
+
+
+def setEmployee(svn):
+   
+    banks = FLATTEN().returnFlat(DB_Access().execute("SELECT BLZ FROM bank"))
+    
+    try:
+        balance = random.randint(0,10000)
+        id = "EMPL-" +str(random.randint(10,99))
+        bank = random.choice(banks)
+        empl = (svn, id, bank, balance)
+        print(empl)
+        DB_Access().execute("INSERT INTO employees VALUES(?,?,?,?)", empl)
+        
+    except:
+        pass
+
 
 def generateBanks():
     for k in range(0,30):
@@ -462,9 +503,18 @@ def generateTech():
 
 
 
-
-
-
+def setTech(svn):
+ 
+   
+    typesf = FLATTEN().returnFlat(DB_Access().execute("SELECT typeNo FROM airplane_type"))
+    print(typesf)
+    titles = ['Matura', 'Diplom', 'HTL-Matura', 'DiplIng']
+    lic = "TECH-NO-" + str(random.randint(10, 99))
+    edu = random.choice(titles)
+    ty =random.choice(typesf)
+    tech = (svn, lic,  edu, ty)
+    print(tech)
+    DB_Access().execute("INSERT INTO technicans VALUES(?,?,?,?)", tech)
 
 
 

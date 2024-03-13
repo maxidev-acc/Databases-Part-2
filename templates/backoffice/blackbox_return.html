@@ -1,0 +1,70 @@
+{% extends "customers/index.html" %}
+
+
+{% block content %}
+  
+<div class="container" style="text-align: center; ">  <h1> Return your checked-out blackboxes</h1>
+  {% for f in user_boxes %}
+  <div class="card" style="display: flex; padding: 3%;"> 
+       
+          
+      <div class="card" >
+        <div  name =  "" class="card-header"  value="{{ f[0] }}" disabled> <h4>  Blackbox :   {{ f[1] }}  </h4> </div>
+           
+            <div class="card-body" style="display: flex; padding: 1%;" >
+
+
+              <div  class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;">
+              <h6>Blackbox belongs to Airplane  </h6>
+              <p class="card-text">  Item {{ f[3] }} </p>
+              <p class="card-text">  Type {{ f[6] }} </p>
+              </div>
+
+              <div  class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(0, 0, 0); display: block; width: 100%; margin: 1%;">
+              <p class="card-text"> {{ f[1] }}</p>
+
+              {% if  f[2] == "0" %}
+              <small id = "sub"  class="btn btn-outline-error"  style="color: rgb(0, 192, 42); border-style: groove; border-color: rgb(0, 192, 42);" > Checked out by You</small>
+              <p class="card-text"> </p>
+              {% endif %}
+              </div>
+
+            
+
+
+            <div  class="btn btn-outline-error" style=" border-style: groove; border-color: rgb(255, 255, 255); display: block; width: 100%; margin: 1%;">
+
+      
+             <form method="post"> 
+              <input id="blackbox"  name ="id"  type="text"  hidden  value="{{ f[1]}}"> 
+
+              <div class="dropdown">
+                <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Action
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <button type="submit" class="btn btn-outline-warning">Return blackbox</button>
+
+                </div>
+              </div>
+            
+            </form>
+          </div>
+ 
+      </div>
+      </div>
+       </div>
+     {% endfor %}
+
+
+
+
+  {% endblock %}
+
+
+
+
+
+
+
+

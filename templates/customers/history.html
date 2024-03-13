@@ -4,45 +4,70 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
-<div style="width: 20cm; margin: 0 auto;  padding: 3%;"> 
+<div style="width: 30cm; margin: 0 auto;  padding: 3%; background-color: rgb(243, 243, 243);" > 
         {% for entry in history %}
 
-          <div class="card text-center" style="margin: 3%;">
-            <form  method ="post">
+
+
+
+          <div class="card text-center" style="margin: 3%; border-color: black;">
+            
             <div class="card-header">
-              <h5 class="card-title">  {{entry[6]}} -  {{entry[7]}}</h5>
+            <h5 class="card-title">  {{entry[6]}} -  {{entry[7]}}</h5>
+            {% if  entry[4] > today %}
+              <div class="alert alert-info"> Active booking</div>
+
+            {% endif %}
+            {% if  entry[4] < today %}
+            <div class="alert alert-primary"> Passed</div>
+
+          {% endif %}
+
+
+
             </div>
             <div class="card-body">
             <input id="name"  name ="bookingID" hidden=" True"   type="text"  value="{{entry[0]}}">
 
-
-         
-           
-
               <p class="card-text"> Depature {{entry[4]}} at {{entry[6]}}  </p>
               <p class="card-text"> Arrival  {{entry[5]}} at  {{entry[7]}} </p>
               <p class="card-text"> Class: {{entry[3]}} </p>
+              
 
+           
 
-              <div class="btn btn-outline-error"  style="color: red; border-style: groove; border-color: red;" >Please print your ticket to fasten the check in at the airport</div>
-
-              <button type="submit" class="btn btn-outline-success"> Print ticket </button>
-            </form>
-            </div>
-            <div class="card-footer text-muted">
-              BookingID: {{entry[0]}}
-          
-            </div>
-            <div class="card-footer text-muted">
             
-              Flight: {{entry[2]}} 
+
+          <div> 
+            <div class="card-footer text-muted"> <small>  BookingID: {{entry[0]}}  </small></div>
+            <div class="card-footer text-muted"> <small> Flight: {{entry[2]}}  </small></div>
+
+            <div class="card-footer text-muted"> 
+              <form  method="POST" action ="{{ url_for('printTicket', id = entry[0])}}">
+                <button type="submit" class="btn btn-outline-success"> Print ticket </button>
+              </form>
+
             </div>
+            <div class="card-footer text-muted"> 
+
+              {% if  entry[4] > today %}
+              <form  method="POST" action ="{{ url_for('cancel_booking', id = entry[0])}}">
+               <button class="btn btn-warning dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                 Action
+               </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <button type="submit" class="btn btn-outline-danger">Confirm booking Cancelation</button>
+               </div>
+              </form>
+              {% endif %}
+            </div>
+
           </div>
-        {% endfor%}
+            
+            
+               
+            
+        </div>
 </div>
-
-
-
-
-
+        {% endfor%}
 {% endblock %}
