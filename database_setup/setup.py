@@ -1,7 +1,7 @@
 import random, string
 
 import names
-from raw_data import letters, lands, cities
+from raw_data import letters, cities
 import sqlite3
 import string
 from hashlib import sha256
@@ -119,10 +119,20 @@ anschluss = """ CREATE TABLE flight_awaits (
     "flightNo2" TEXT,
     CONSTRAINT pk PRIMARY KEY (flightNo, flightNo2),
     CONSTRAINT fk FOREIGN KEY (flightNo) REFERENCES flights(flightNo),
-    CONSTRAINT fk2 FOREIGN KEY (flightNo) REFERENCES flights(flightNo2)
+    CONSTRAINT fk2 FOREIGN KEY (flightNo2) REFERENCES flights(flightNo)
 
      
 );"""
+
+
+
+#DB_Access().execute("DROP TABLE flight_awaits")
+#DB_Access().execute(anschluss)
+
+k1 ="FlightNo 06d0cf1a-dc98-11ee-bd1a-2c4d544f4f1c"
+k2 = "FlightNo 06dd5485-dc98-11ee-b411-2c4d544f4f1c"
+
+
 
 from datetime import datetime, timedelta 
 

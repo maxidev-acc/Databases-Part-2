@@ -1,10 +1,8 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash, send_file
 import time
 from flask_sqlalchemy import SQLAlchemy
-
 from datetime import date, datetime
 from tools import Transaction, BOOKING,DB_Access,  Registration, Authentification, Ticket, USER, BLACKBOX_CHECKOUT, CANCEL_BOOKING
-
 import shutil
 
 
@@ -82,7 +80,7 @@ class SESSION():
 
                     
 
-
+#global session var 
 Session = SESSION()
 
 
@@ -204,7 +202,6 @@ def home():
     return redirect(url_for('login'))
 
 
-
 @app.route('/available_flights', methods=['GET', 'POST'])
 def available_flights():
     if Session.ActiveSessionPasseneger():
@@ -220,11 +217,6 @@ def available_flights():
     return redirect(url_for('login'))
 
 
-
-
-
-
-
 @app.route('/booking/<flightNo>', methods=['GET', 'POST'])
 def booking(flightNo):
     if Session.ActiveSessionPasseneger():
@@ -238,9 +230,6 @@ def booking(flightNo):
         return render_template('customers/booking.html',  flightNo= flightNo)
 
     return redirect(url_for('login'))
-
-
-
 
 
 @app.route('/flights_search', methods=['GET', 'POST'])
@@ -259,11 +248,6 @@ def flights_search():
             return render_template('customers/flight_search.html' )             
     
     return 'You are not logged in'
-
-
-
-
-
 
 
 @app.route('/shop', methods=['GET','POST'])

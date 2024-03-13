@@ -160,7 +160,7 @@ CREATE TABLE flights (
     "flightNo2" TEXT,
     CONSTRAINT pk PRIMARY KEY (flightNo, flightNo2),
     CONSTRAINT fk FOREIGN KEY (flightNo) REFERENCES flights(flightNo),
-    CONSTRAINT fk2 FOREIGN KEY (flightNo) REFERENCES flights(flightNo2)
+    CONSTRAINT fk2 FOREIGN KEY (flightNo2) REFERENCES flights(flightNO)
 
     
 );
