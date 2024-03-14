@@ -4,7 +4,32 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
+
+
+
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for category, message in messages %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Attention! </strong> {{ message }} 
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %} 
+
+
+
+
+
 <div style="width: 30cm; margin: 0 auto;  padding: 3%; background-color: rgb(243, 243, 243);" > 
+
         {% for entry in history %}
 
 

@@ -1,7 +1,4 @@
 
-
-
-
 CREATE TABLE IF NOT EXISTS "personen" (
 
     "svn" INT(10),

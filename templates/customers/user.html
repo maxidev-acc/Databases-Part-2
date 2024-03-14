@@ -65,7 +65,7 @@
     <ul class=flashes>
     {% for category, message in messages %}
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <strong>Success! </strong> {{ message }} 
+      <strong> Success!  </strong> {{ message }} 
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
@@ -216,7 +216,8 @@
               document.getElementById("street").disabled = true;
               document.getElementById("houseNr").disabled = true;
               document.getElementById("location").disabled = true;
-            
+              document.getElementById("mod").disabled = true;
+
             }});
               </script>
 

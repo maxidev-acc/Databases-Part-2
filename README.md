@@ -37,29 +37,38 @@ Danach einfach app.py anklicken; oben rechts "Run python file", und im Browser h
 
 
 
-APP -- User ist Angestellter
-                        --Backoffice        -- Flugschrieber ausborgen, Übersicht
-                                            -- Profil bearbeiten
-                                            -- Gebuchte Flüge sehen -- nur für Piloten
+APP --
+    LOGIN
+    REGISTER ->Nur Passenger Profile
 
-    -- User ist Customer
-                        -- Customer-Seite   --Flüge suchen
-                                            --Flüge in den Warenkorb legen
-                                            --Warenkorb -Tansaktion mit virtueller Bank-API, die eine TranskationsID zurückgibt
-                                                                                    -- https://retoolapi.dev/iibcMI/transactionAPI/1
-                                            --Gebuchte Tickets aufgelistet -- Tickets ausdrucken 
+            -- User ist Angestellter
+                                --Backoffice        -- Flugschrieber ausborgen, Übersicht
+                                                    -- Profil bearbeiten
+                                                    -- Gebuchte Flüge sehen -- nur für Piloten
+
+            -- User ist Passenger
+                                -- Customer-Seite   --Flüge suchen
+                                                    --Flüge in den Warenkorb legen
+                                                    --Warenkorb -Tansaktion mit virtueller Bank-API, die eine TranskationsID zurückgibt
+                                                                                            -- https://retoolapi.dev/iibcMI/transactionAPI/1
+                                                    --Gebuchte Tickets aufgelistet -- Tickets ausdrucken 
 
 
 
 #Beispielbenutzer:
 
-Email, Passwort
-admin@gmail.com, admin
-maxi@gmail.com, maxi
-JeffreyHarris@gmail.com, pilot
-EvaCollins@gmail.com, technican
+
+PILOT: 
+Powers@gmail.com, password 
+
+TECHNIKER
+Farmer@gmail.com, password
+
+PASSAGIER
+
+Neff@gmail.com, password
 
 
 
-
-
+Für eine genaue Technische Dokumentation, siehe PDF: Dokumentation (/documents).
+Für Referenzen und Angaben zu AI-Tools, die in diesem Projekt verwendet wurden, siehe PDF: AI_Buddy (/documents)

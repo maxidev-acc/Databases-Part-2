@@ -306,7 +306,7 @@ def cancel_booking(id):
                     print(id)
                     CANCEL_BOOKING(id)
                         
-
+                    flash("Booking "+ id +" has been cancelled!")
                     return redirect(url_for('history'))
         return redirect(url_for('history'))
 
@@ -365,6 +365,7 @@ def blackbox_return():
                 print(id)
                 BLACKBOX_CHECKOUT().return_blackbox(id)
                 ub = BLACKBOX_CHECKOUT().user_blackboxes(session['id'])
+                flash("Blackbox "+id+ " has been returned!")
                 return render_template('backoffice/blackbox_return.html', user_boxes = ub )
 
 
@@ -387,6 +388,8 @@ def blackbox_checkout():
                 BLACKBOX_CHECKOUT().checkout(session['id'], id)
                 ab = BLACKBOX_CHECKOUT().available_blackboxes()
                 blackboxids = BLACKBOX_CHECKOUT().blackbox_ids()
+                flash("Blackbox "+id+ " has been checked out!")
+
                 return render_template('backoffice/blackbox_checkout.html', available_boxes = ab, ids = blackboxids)
 
 

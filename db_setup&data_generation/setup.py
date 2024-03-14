@@ -1,15 +1,13 @@
 import random, string
-
 import names
 from raw_data import letters, cities
 import sqlite3
 import string
 from hashlib import sha256
 from tqdm import tqdm
-
 import random
 import uuid
-
+from datetime import datetime, timedelta 
 
 class DB_Access():
 
@@ -78,20 +76,6 @@ telNo = """ CREATE TABLE telNo (
 
 );"""
 
-
-
-def genTel():
-    per = FLATTEN().returnFlat(DB_Access().execute("SELECT svn FROM personen"))
-
-    for pers in per:
-        number = "+"+ str(random.randint(1000000000000, 9000000000000))
-        data = (pers, number)
-        DB_Access().execute("INSERT INTO telNO VALUES(?,?)", data)
-
-
-
-
-
 employees = """ CREATE TABLE employees (
   "svn" INTEGER ,
   "employee_id" VARCHAR UNIQUE NOT NULL,
@@ -123,43 +107,6 @@ anschluss = """ CREATE TABLE flight_awaits (
 
      
 );"""
-
-
-
-#DB_Access().execute("DROP TABLE flight_awaits")
-#DB_Access().execute(anschluss)
-
-k1 ="FlightNo 06d0cf1a-dc98-11ee-bd1a-2c4d544f4f1c"
-k2 = "FlightNo 06dd5485-dc98-11ee-b411-2c4d544f4f1c"
-
-
-
-from datetime import datetime, timedelta 
-
-def generienrAnschluss():
-    start = datetime.now()
-
-    for k in range(1,40):
-        
-        #try:
-            fl1_dep = start+ timedelta(days=k)
-            fl1_arr = fl1_dep + timedelta(days=2)
-            fl2_dep =fl1_arr
-            fl2_arr = fl2_dep + timedelta(days=2)
-            flights1 = FLATTEN().returnFlat(DB_Access().execute("SELECT flightNo FROM flights WHERE depaturetime > ? AND depaturetime <? ", (str(fl1_dep),str(fl1_arr))))
-            flights2 = FLATTEN().returnFlat(DB_Access().execute("SELECT flightNo FROM flights WHERE depaturetime > ? AND depaturetime <? ", (str(fl2_dep),str(fl2_arr))))
-            k = random.choice(flights1)
-            j = random.choice(flights2)
-            print(k)
-            print(j)
-            DB_Access().execute("INSERT INTO flight_awaits VALUES(?,?)",(k,j))
-        #except:
-            pass
-
-
-
-
-
 
 
 
@@ -227,54 +174,6 @@ airpl_exemp = """ CREATE TABLE airplane_exemplar (
 
 
 
-
-
-def genManuFacturers():
-    names = ["Embraer ", "Lockheed Martin (LMT)", "Airbus (EADSY)", "Boeing (BA)" ]
-    for name in names:
-        DB_Access().execute("INSERT INTO manufacturer VALUES (?)", (name,))
-    
-
-
-
-
-
-def gen_airplane_type():
-    manufacturers  = FLATTEN().returnFlat(DB_Access().execute("SELECT name FROM manufacturer"))
-    print(manufacturers)
-    for k in range(0,10):
-            typeNo = "TYP - " + str(random.randint(100,999))
-            staff = random.randint(1,7)
-            seats = random.randint(150,180)
-            name = random.choice(manufacturers)
-            print((typeNo, staff, seats, name))
-            DB_Access().execute("INSERT INTO airplane_type VALUES(?,?,?,?)", (typeNo, staff, seats, name))
-
-
-
-
-
-
-
-def genAirplaneExemp():
-    typeNo  = FLATTEN().returnFlat(DB_Access().execute("SELECT typeNo from airplane_type"))
-    print(typeNo)
-    for k in range(0,100):
-            invNo = "Obj " + str(random.randint(150,180)) +" -Item " + str(random.randint(100,900))
-            year = random.randint(1999,2012)
-            hours = random.randint(0,10000)
-            typeNo1 = random.choice(typeNo)
-            bb = "BlackBoxNo. " + str(random.randint(20,40)) +"-" + str(random.randint(20,40))
-            print(invNo, year, hours, typeNo1, bb)
-            DB_Access().execute("INSERT INTO airplane_exemplar VALUES(?,?,?,?,?)", (invNo, year, hours, typeNo1, bb))
-
-
-
-
-
-
-
-
 flights = """ CREATE TABLE flights (
   "flightNo" TEXT,
   "depaturetime" DATETIME NOT NULL,
@@ -311,6 +210,94 @@ blackbox1 = """ CREATE TABLE blackbox (
  CONSTRAINT tpk FOREIGN KEY (blackbox_id) REFERENCES airplane_exemplar (blackbox_id),
  CONSTRAINT pk PRIMARY KEY (blackbox_id)
 );"""
+
+
+
+
+
+
+
+
+
+def generienrAnschluss():
+    start = datetime.now()
+
+    for k in range(1,40):
+        
+        #try:
+            fl1_dep = start+ timedelta(days=k)
+            fl1_arr = fl1_dep + timedelta(days=2)
+            fl2_dep =fl1_arr
+            fl2_arr = fl2_dep + timedelta(days=2)
+            flights1 = FLATTEN().returnFlat(DB_Access().execute("SELECT flightNo FROM flights WHERE depaturetime > ? AND depaturetime <? ", (str(fl1_dep),str(fl1_arr))))
+            flights2 = FLATTEN().returnFlat(DB_Access().execute("SELECT flightNo FROM flights WHERE depaturetime > ? AND depaturetime <? ", (str(fl2_dep),str(fl2_arr))))
+            k = random.choice(flights1)
+            j = random.choice(flights2)
+            print(k)
+            print(j)
+            DB_Access().execute("INSERT INTO flight_awaits VALUES(?,?)",(k,j))
+        #except:
+            pass
+
+
+
+
+
+def genManuFacturers():
+    names = ["Embraer ", "Lockheed Martin (LMT)", "Airbus (EADSY)", "Boeing (BA)" ]
+    for name in names:
+        DB_Access().execute("INSERT INTO manufacturer VALUES (?)", (name,))
+    
+
+
+
+
+
+def gen_airplane_type():
+    manufacturers  = FLATTEN().returnFlat(DB_Access().execute("SELECT name FROM manufacturer"))
+    print(manufacturers)
+    for k in range(0,10):
+            typeNo = "TYP - " + str(random.randint(100,999))
+            staff = random.randint(1,7)
+            seats = random.randint(150,180)
+            name = random.choice(manufacturers)
+            print((typeNo, staff, seats, name))
+            DB_Access().execute("INSERT INTO airplane_type VALUES(?,?,?,?)", (typeNo, staff, seats, name))
+
+
+
+
+
+def genTel():
+    per = FLATTEN().returnFlat(DB_Access().execute("SELECT svn FROM personen"))
+
+    for pers in per:
+        number = "+"+ str(random.randint(1000000000000, 9000000000000))
+        data = (pers, number)
+        DB_Access().execute("INSERT INTO telNO VALUES(?,?)", data)
+
+
+
+def genAirplaneExemp():
+    typeNo  = FLATTEN().returnFlat(DB_Access().execute("SELECT typeNo from airplane_type"))
+    print(typeNo)
+    for k in range(0,100):
+            invNo = "Obj " + str(random.randint(150,180)) +" -Item " + str(random.randint(100,900))
+            year = random.randint(1999,2012)
+            hours = random.randint(0,10000)
+            typeNo1 = random.choice(typeNo)
+            bb = "BlackBoxNo. " + str(random.randint(20,40)) +"-" + str(random.randint(20,40))
+            print(invNo, year, hours, typeNo1, bb)
+            DB_Access().execute("INSERT INTO airplane_exemplar VALUES(?,?,?,?,?)", (invNo, year, hours, typeNo1, bb))
+
+
+
+
+
+
+
+
+
 def setup_bb():
     boxes = DB_Access().execute("SELECT blackbox_id FROM airplane_exemplar ")
     res = []
