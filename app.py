@@ -237,8 +237,8 @@ def flights_search():
     if Session.ActiveSessionPasseneger():
 
             if request.method == 'POST':
-                from_ = request.form['from']
-                to_ = request.form['to']
+                from_ = request.form['from'].capitalize()
+                to_ = request.form['to'].capitalize()
                 today = str(datetime.now())
                 results = DB_Access().executeFetchAll("SELECT * FROM flights NATURAL JOIN pilots NATURAL JOIN personen WHERE depatureAirport = ? AND destinationAirport = ? AND depaturetime > ? ", (from_, to_, today)) 
                 session["available_flights"] = results
