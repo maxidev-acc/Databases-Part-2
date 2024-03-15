@@ -7,8 +7,69 @@ import random
 import uuid
 import json
 import requests
-
 import time
+from flask import session
+
+class SESSION():
+ 
+    def __init__(self):
+        print("Session init")
+        pass
+
+    def setUser(self, user, role):
+        
+        session['user'] = {"svn": user[0],"first_name":user[1], "last_name": user[2], "postal": user[3], "location":user[4], "street": user[5], "houseNr": user[6], "birthdate": user[7],"email": user[8]}
+        print(session['user'])
+        session['id'] = user[0]
+        session['role'] = role
+        session['products'] = []
+        self.setItemCount()
+
+    def getUser(self,id):
+            return session['user']
+
+
+    def setItemCount(self):
+        count = len(session['products'])
+        session['itemcount'] = count
+
+    def getSumm(self):
+        sum =0
+        currentproducts = session['products']
+        K = len(currentproducts)
+        sum = K*100
+        return sum*0.9
+
+    def deleteItemFromCart(self,flightNo):
+        
+        index = 0
+        for item in session['products']:  
+            if item[0] == flightNo:
+                del session['products'][index]
+                return 0
+            index = index +1 
+
+    def clearSessionProducts(self):
+        session['products'] = []
+        return session['products']
+
+    def ActiveSessionPassenger(self):
+        if 'id' in session:
+            if session['role'] == "PASSENGER":
+                return True
+        else:
+            return False
+    
+    def ActiveSessionEmployee(self):
+        if 'id' in session:
+            if session['role'] != "PASSENGER":
+                return True
+        else:
+            return False
+
+                    
+
+
 
 
 
