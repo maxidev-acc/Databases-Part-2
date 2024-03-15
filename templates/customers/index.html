@@ -57,7 +57,8 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
         
-              <a class="dropdown-item" href="{{ url_for('flights_search') }}" id ="search">Search flights <i class="fa fa-plane" aria-hidden="true"></i>
+              <a class="dropdown-item" href="{{ url_for('flights_search') }}" id ="search">Search flights <i class="fa fa-search" aria-hidden="true"></i>
+
               </a>
              <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="{{ url_for('history') }}" id = "tickets"> Your tickets <i class="fa fa-ticket" aria-hidden="true"></i>
@@ -68,12 +69,14 @@
     
 
 
-             <a class="dropdown-item" href="{{ url_for('blackbox_return') }}" id = "return">Return blackbox <i class="fa fa-ticket" aria-hidden="true"></i>
+             <a class="dropdown-item" href="{{ url_for('blackbox_return') }}" id = "return">Return blackbox <i class="fa fa-upload" aria-hidden="true"></i>
+
              </a>
-             <a class="dropdown-item" href="{{ url_for('blackbox_checkout') }}" id = "checkout">Blackbox checkout<i class="fa fa-ticket" aria-hidden="true"></i>
+             <a class="dropdown-item" href="{{ url_for('blackbox_checkout') }}" id = "checkout">Blackbox checkout <i class="fa fa-plus-square-o" aria-hidden="true"></i>
              </a>
+             <div class="dropdown-divider"></div>
             
-             <a class="dropdown-item" href="{{ url_for('employee_flights') }}" id = "flights">Your flights <i class="fa fa-ticket" aria-hidden="true"></i>
+             <a class="dropdown-item" href="{{ url_for('employee_flights') }}" id = "flights">Your flights <i class="fa fa-plane" aria-hidden="true"></i>
              </a>
 
             </div>
@@ -127,7 +130,7 @@
 
     <div id="footer">
       {% block footer %}
-      &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.
+      &copy; Copyright 2024 by <a href="#" >you</a>.
       {% endblock %}
     </div>
 
