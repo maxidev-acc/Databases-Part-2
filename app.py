@@ -1,7 +1,6 @@
 from flask import Flask, render_template, session, request, redirect, url_for, flash, send_file
-import time
 from flask_sqlalchemy import SQLAlchemy
-from datetime import date, datetime
+from datetime import  datetime
 from tools import Transaction, BOOKING,DB_Access,  Registration, Authentification, Ticket, USER, BLACKBOX_CHECKOUT, CANCEL_BOOKING, SESSION
 import shutil
 
@@ -11,9 +10,6 @@ import shutil
 
 
 app = Flask(__name__)
-
-#configuration can be kept if further updates may include SQALCHEMY- Engine
-
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -81,7 +77,7 @@ def register():
 
 
 
-
+#UPDATE PROFILE INFO ROUTE
 @app.route('/user', methods=('GET', 'POST'))
 def user():
     #Passenger Route
@@ -242,13 +238,6 @@ def printTicket(id):
     return render_template("login.html")
 
 
-
-
-
-
-
-
-
 #BACKOFFICE ROUTES
  
 @app.route('/backoffice')
@@ -266,12 +255,12 @@ def blackbox_return():
             if request.method == "POST":
                 id = request.form['id']
                 BLACKBOX_CHECKOUT().return_blackbox(id)
-                ub = BLACKBOX_CHECKOUT().user_blackboxes(session['id'])
+                blackboxes_user = BLACKBOX_CHECKOUT().user_blackboxes(session['id'])
                 flash("Blackbox "+id+ " has been returned!")
                 return render_template('backoffice/blackbox_return.html', user_boxes = blackboxes_user )
 
 
-            return render_template('backoffice/blackbox_return.html', user_boxes = ub)
+            return render_template('backoffice/blackbox_return.html', user_boxes = blackboxes_user)
     else:
             return redirect(url_for('permDenied'))
 

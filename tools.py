@@ -19,7 +19,6 @@ class SESSION():
     def setUser(self, user, role):
         
         session['user'] = {"svn": user[0],"first_name":user[1], "last_name": user[2], "postal": user[3], "location":user[4], "street": user[5], "houseNr": user[6], "birthdate": user[7],"email": user[8]}
-        print(session['user'])
         session['id'] = user[0]
         session['role'] = role
         session['products'] = []
@@ -29,18 +28,18 @@ class SESSION():
             return session['user']
 
 
-    def setItemCount(self):
+    def setItemCount(self): 
         count = len(session['products'])
         session['itemcount'] = count
 
-    def getSumm(self):
+    def getSumm(self): #returns cash sum of cart
         sum =0
         currentproducts = session['products']
-        K = len(currentproducts)
-        sum = K*100
+        sumCart= len(currentproducts)
+        sum = sumCart*100
         return sum*0.9
 
-    def deleteItemFromCart(self,flightNo):
+    def deleteItemFromCart(self,flightNo): # delets item from cart list
         
         index = 0
         for item in session['products']:  
@@ -63,6 +62,8 @@ class SESSION():
     def ActiveSessionEmployee(self):
         if 'id' in session:
             if session['role'] != "PASSENGER":
+                print(session['id'])
+                session['empID'] = DB_Access().executeFetchSingle("SELECT employee_id FROM employees WHERE svn =?", (session['id'],))
                 return True
         else:
             return False
@@ -79,19 +80,19 @@ class Registration():
 
     def register(self, data, phone):
             data =list(data)
-            pw = data[9]
+            password = data[9]
             del data[9]
-            hash_pw = sha256(pw.encode('utf-8')).hexdigest()
+            hash_pw = sha256(password.encode('utf-8')).hexdigest()
             data.append(hash_pw)
-            insTuple = tuple(data)
-            phoneT = (data[0], phone)
+            inserstionTuple = tuple(data)
+            insetionTuplePhone = (data[0], phone)
             letters = string.ascii_lowercase
-            pn = "PASS-NO-" + random.choice(letters)+ random.choice(letters)+ "-" + str(random.randint(100, 999))
+            passengernumber = "PASS-NO-" + random.choice(letters)+ random.choice(letters)+ "-" + str(random.randint(100, 999))
             try:
                 
-                DB_Access().executeInsert("INSERT INTO personen VALUES(?, ?, ?, ?,?,?,?,?,?,?)", insTuple)
-                DB_Access().executeInsert("INSERT INTO telNo VALUES(?, ?)",phoneT)
-                DB_Access().executeInsert("INSERT INTO passenger VALUES(?, ?)",(data[0], pn))
+                DB_Access().executeInsert("INSERT INTO personen VALUES(?, ?, ?, ?,?,?,?,?,?,?)", inserstionTuple)
+                DB_Access().executeInsert("INSERT INTO telNo VALUES(?, ?)",insetionTuplePhone)
+                DB_Access().executeInsert("INSERT INTO passenger VALUES(?, ?)",(data[0], passengernumber))
 
             except Exception as e:
                 print(e)
@@ -105,9 +106,9 @@ class Authentification():
     def __init__(self,data):
         self.data = data
     def authentification(self):
-        pw = self.data[1]
+        password = self.data[1]
         email = self.data[0]
-        hash_pw = sha256(pw.encode('utf-8')).hexdigest()
+        hash_pw = sha256(password.encode('utf-8')).hexdigest()
         userID =DB_Access().executeFetchAll("SELECT svn FROM personen WHERE email = ? AND password = ?  ", (email, hash_pw))
         if userID:
             return True
@@ -131,11 +132,11 @@ class USER():
     def user(self, arg, par):
         stmt = "SELECT * FROM personen WHERE "+ arg + " = ?"
         print(stmt)
-        data = DB_Access().executeFetchOne(stmt,(par,))
+        data = DB_Access().executeFetchOne(stmt,(par,)) #selects user with variable (where ? = ? )
         self.svn = data[0]
         return data
         
-    def perm(self, svn):
+    def perm(self, svn): #permission of user
         print(DB_Access().executeFetchOne("SELECT * FROM pilots WHERE svn =  ? ", (svn,)))
         if DB_Access().executeFetchOne("SELECT * FROM pilots WHERE svn =  ? ", (svn,)) !=None:
             return "PILOT"
@@ -147,7 +148,6 @@ class USER():
         for index in data:
             sql =  "UPDATE personen SET " +index+ "= ? WHERE svn = "+ str(svn) 
             param = data[index]
-            print(param+"1")
             DB_Access().executeInsert(sql,(param,))
 
 
@@ -155,12 +155,11 @@ class USER():
 
 
 
-class Transaction():
+class Transaction(): #Transaction class to simulate virtual bank -API where payment transaction is verified
     def __init__(self):
         pass
     def verify(self, bankaccount, cvv):
         r =requests.get("https://retoolapi.dev/iibcMI/transactionAPI/1")
-        print(r)
         print(r.text)
         res = json.loads(r.text)
         print(res)
@@ -175,18 +174,17 @@ class Transaction():
 class BOOKING():
     def __init__(self, flights_in_cart, passNo):
 
-        klasse = "A"
+        klasse = "A" #constant
         for flight in flights_in_cart:
             bookingNo = "Booking ID -"+ str(uuid.uuid1()) + " OC"
             flightNo = flight[0]
             DB_Access().executeInsert("INSERT INTO bookings VALUES (?,?,?,?)", (bookingNo, passNo, flightNo, klasse))
-        print("Booking  transaction successfully commited")    
+            print("Booking  for" + bookingNo  +" transaction successfully commited")    
 
 class CANCEL_BOOKING():
     def __init__(self, id):#
         try:
-            print("Attempt to cancel booking:" , id)
-            print(id)
+            print("Attempt to cancel booking: " , id)
             DB_Access().executeInsert("DELETE FROM bookings WHERE bookingNo = ?", (id,))
         except Exception as e:
             print(e)
@@ -198,12 +196,10 @@ class BLACKBOX_CHECKOUT():
         pass
 
     def available_blackboxes(self):
-        time.sleep(0.5)
         return DB_Access().executeFetchAll("SELECT * FROM blackbox NATURAL JOIN airplane_exemplar")
     
 
-    def blackbox_ids(self):
-        
+    def blackbox_ids(self): #returns list of isolated blackbox ids
         fetch =  DB_Access().executeFetchAll("SELECT blackbox_id FROM blackbox")
         returnlist = []
         for k in fetch:
@@ -221,14 +217,11 @@ class BLACKBOX_CHECKOUT():
             technicans = []
             for k in technicansraw:
                 technicans.append(k[0])
-            print(technicans)
-            print(svn)
-            print((svn in technicans))
+            # asserts if employee is no oilot or technican
             assert((svn in pilots) or (svn in technicans))
             emp_id = DB_Access().executeFetchSingle("SELECT employee_id FROM employees WHERE svn = ?", (svn,)) 
             print(emp_id)
-            checkpoint =  DB_Access().executeFetchSingle("SELECT employee_id FROM blackbox WHERE blackbox_id = ?", (blackbox_id,)) 
-            print("CP: ", checkpoint)
+            checkpoint =  DB_Access().executeFetchSingle("SELECT employee_id FROM blackbox WHERE blackbox_id = ?", (blackbox_id,))  #ächecks if noone else has checked out blackbox
             assert(checkpoint == None)
             DB_Access().executeInsert("UPDATE blackbox SET employee_id = ?, is_available = False WHERE blackbox_id =?" , (emp_id, blackbox_id))
             print("Sucessfully checked out blackbox")
@@ -243,18 +236,10 @@ class BLACKBOX_CHECKOUT():
         return blackboxes
     
     def return_blackbox(self, id):
-
-        print(id)
-        time.sleep(0.5)
         DB_Access().executeInsert("UPDATE blackbox SET employee_id = NULL, is_available = TRUE WHERE blackbox_id =?" , (id,))
         return 0
 
 
-
-
-
-#('Booking ID -72fb9ac3-dfc8-11ee-ae40-2c4d544f4f1c OC', 'PASS-NO-ay-611', 'FlightNo 117380e2-dc98-11ee-83e3-2c4d544f4f1c', 'A',
-# 5763170599, '2024-03-12 16:33:34.457647', '2024-03-13 16:33:34.457647', 'Sarajevo', 'Vienna', 'PIL-NO-52', 'TYP - 480', 'SystemAdmin', 'Admin', 5743, 'DE', 'Adminstraße', 29, 17051999, 'admin@gmail.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918')
 
 class Ticket(FPDF):
     
@@ -262,44 +247,29 @@ class Ticket(FPDF):
        
              
         self.set_text_color(37, 150, 190)
-
         dic = ["Booking-ID:", "Passenger No:", "Flight No:", "Class:", "SVN", "Depature time:", "Arrival time", "FROM", "TO", "Pilot", "Airplane Type", "Firstname", "Lastname", "Postal", "Location", "Street", " Street No", "Birthdate", "Email:" ]
         data = data[0:19]
         self.ID =str(uuid.uuid1())
         self.name = self.ID+".pdf"
         self.add_page()
-        #self.set_text_color(37, 150, 190)
         self.set_draw_color(37, 150, 190)
-        
         self.set_font("Arial", "B", 12)
         today_date = str(datetime.date.today())
-
         self.image("static/plane-icon.png",100,15,10)
-
         self.cell(180, 10, " ", border=0, ln =1)
-        self.image("static/qrcode.jpeg",100,200,80)
-       
-        
+        self.image("static/qrcode.jpeg",100,200,80)  
         self.cell(180, 10, today_date, border=0, ln=1, align="R")
         self.set_fill_color(37, 150, 190)
-
         self.set_font("Arial", "B", 20)
         self.cell(184,2, "", border = 1, ln=1, align = "C" ,fill=True)
         self.cell(2,20, "", border = 1, ln=0, align = "C", fill=True)
-
         self.cell(180,20, "Boarding pass", border = 1, ln=0, align = "C")
-
-    
-
         self.cell(2,20, "", border = 1, ln=1, align = "C", fill=True)
         self.cell(184,2, "", border = 1, ln=1, align = "C", fill=True)
-
-
         self.set_fill_color(37, 150, 190)
         self.set_font("Arial", "B", 12)
         self.set_text_color(255, 255, 255)
         self.cell(184,2, "", border = 0, ln=1, align = "C", )
-
         self.cell(150,12, "Flight Details", border = 0, ln=1, fill=True, align = "L")
         self.set_text_color(37, 150, 190)
 

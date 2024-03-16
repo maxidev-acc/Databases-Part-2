@@ -87,6 +87,8 @@
                   <div class="mt-3">
                     <h4>{{ session['user']['first_name']}} </h4>
                     <p class="text-secondary mb-1"> {{ session['role'] }}</p>
+                    <p class="text-secondary mb-1"> {{ session['empID'] }}</p>
+
                     <p class="text-muted font-size-sm">{{ session['user']['location']}} </p>
                     <img src="https://flagsapi.com/{{session['user']['location']}}/shiny/64.png">
                   </div>

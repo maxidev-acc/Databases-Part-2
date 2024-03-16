@@ -28,14 +28,48 @@ Erstellung venv: (Windows)
     #normale CMD
     venvname\scripts\activate.bat
     pip freeze >requirements.txt  
-
-
     Danach einfach app.py anklicken; oben rechts "Run python file", und im Browser http://127.0.0.1:5000/ öffnen.
 
 
 2.Projekt Aufbau
 
-APP --
+
+            Genereller Aufbau:
+            
+            app.py -Main Programm, __main__, enthält die Routen
+            tools.py - Hilfsklassen und deren Funktionen (Authentifizierung, Registrierung, Buchung, ...) 
+            DB_Access.py - gesonderte Hilfsklasse für gekappseltnen Datenbankzugriff (SQL)
+
+            templates/
+                    *alle HTML templates, index.html als Base template*
+                    customers/ -> Frontoffice Seiten für Passagiere
+                    backoffice/ -> Backoffice Seiten für Angestellte (Piloten,Techniker)
+
+
+            instance/
+                Datenbank
+
+            documents/ 
+                PDFs des Entwurfs, Texte zu AI-Buddy, genaue Technische Dokumentation der App
+                Entwurf: REL und ERM
+
+
+            setup/
+                SetUp Datei zum befüllen der Datenbank, SQL File mit den Table- Anweisungen, rawdata.py mit Hilfs-Objekten zur Datengeneration
+
+
+            .venv/ 
+                lokale Laufzeitumgebung, bitte mit .gitignore (*) erstellen
+
+
+
+
+
+
+
+
+
+APP Aufbau --
 
     Login -> Beispielbenuter siehe unten
     Register  ->Nur Passenger Profile
@@ -50,7 +84,8 @@ APP --
                                                     --Flüge in den Warenkorb legen
                                                     --Warenkorb -Tansaktion mit virtueller Bank-API, die eine TranskationsID zurückgibt
                                                                                             -- https://retoolapi.dev/iibcMI/transactionAPI/1
-                                                    --Gebuchte Tickets aufgelistet -- Tickets ausdrucken und Storneiren 
+
+                                                    --Gebuchte Tickets aufgelistet -- Tickets ausdrucken und Stornieren 
 
 
 
